@@ -60,6 +60,7 @@ private:
 
     std::string m_sProtobufDefinition;
 
+
 public:
 
     CConnection(const std::string& sProtobufDefinition);
@@ -68,7 +69,7 @@ public:
 
 	void Connect(const std::string & sNetworkCredentials) override;
 
-	void SendRequest() override;
+	void SendTestMessage() override;
 
 };
 

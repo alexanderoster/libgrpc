@@ -130,20 +130,20 @@ LibGRPCWrapperResult libgrpcwrapper_connection_connect(LibGRPCWrapper_Connection
 	}
 }
 
-LibGRPCWrapperResult libgrpcwrapper_connection_sendrequest(LibGRPCWrapper_Connection pConnection)
+LibGRPCWrapperResult libgrpcwrapper_connection_sendtestmessage(LibGRPCWrapper_Connection pConnection)
 {
 	IBase* pIBaseClass = (IBase *)pConnection;
 
 	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pConnection, "Connection", "SendRequest");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConnection, "Connection", "SendTestMessage");
 		}
 		IConnection* pIConnection = dynamic_cast<IConnection*>(pIBaseClass);
 		if (!pIConnection)
 			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
 		
-		pIConnection->SendRequest();
+		pIConnection->SendTestMessage();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -178,8 +178,8 @@ LibGRPCWrapperResult LibGRPCWrapper::Impl::LibGRPCWrapper_GetProcAddress (const 
 	
 	if (sProcName == "libgrpcwrapper_connection_connect") 
 		*ppProcAddress = (void*) &libgrpcwrapper_connection_connect;
-	if (sProcName == "libgrpcwrapper_connection_sendrequest") 
-		*ppProcAddress = (void*) &libgrpcwrapper_connection_sendrequest;
+	if (sProcName == "libgrpcwrapper_connection_sendtestmessage") 
+		*ppProcAddress = (void*) &libgrpcwrapper_connection_sendtestmessage;
 	if (sProcName == "libgrpcwrapper_getversion") 
 		*ppProcAddress = (void*) &libgrpcwrapper_getversion;
 	if (sProcName == "libgrpcwrapper_getlasterror") 

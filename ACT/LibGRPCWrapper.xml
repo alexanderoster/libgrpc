@@ -63,8 +63,9 @@
 			<param name="NetworkCredentials" type="string" pass="in" description="Host to connect to" />
 		</method>
 		
-		<method name="SendRequest" description="Send a request">		
+		<method name="SendTestMessage" description="Send a test message">
 		</method>
+		
 	
 	
 	</class>	

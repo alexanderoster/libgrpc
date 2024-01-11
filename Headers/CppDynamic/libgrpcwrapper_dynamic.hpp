@@ -381,7 +381,7 @@ public:
 	}
 	
 	inline void Connect(const std::string & sNetworkCredentials);
-	inline void SendRequest();
+	inline void SendTestMessage();
 };
 	
 	/**
@@ -482,7 +482,7 @@ public:
 		
 		pWrapperTable->m_LibraryHandle = nullptr;
 		pWrapperTable->m_Connection_Connect = nullptr;
-		pWrapperTable->m_Connection_SendRequest = nullptr;
+		pWrapperTable->m_Connection_SendTestMessage = nullptr;
 		pWrapperTable->m_GetVersion = nullptr;
 		pWrapperTable->m_GetLastError = nullptr;
 		pWrapperTable->m_AcquireInstance = nullptr;
@@ -549,12 +549,12 @@ public:
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Connection_SendRequest = (PLibGRPCWrapperConnection_SendRequestPtr) GetProcAddress(hLibrary, "libgrpcwrapper_connection_sendrequest");
+		pWrapperTable->m_Connection_SendTestMessage = (PLibGRPCWrapperConnection_SendTestMessagePtr) GetProcAddress(hLibrary, "libgrpcwrapper_connection_sendtestmessage");
 		#else // _WIN32
-		pWrapperTable->m_Connection_SendRequest = (PLibGRPCWrapperConnection_SendRequestPtr) dlsym(hLibrary, "libgrpcwrapper_connection_sendrequest");
+		pWrapperTable->m_Connection_SendTestMessage = (PLibGRPCWrapperConnection_SendTestMessagePtr) dlsym(hLibrary, "libgrpcwrapper_connection_sendtestmessage");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Connection_SendRequest == nullptr)
+		if (pWrapperTable->m_Connection_SendTestMessage == nullptr)
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -631,8 +631,8 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_Connect == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("libgrpcwrapper_connection_sendrequest", (void**)&(pWrapperTable->m_Connection_SendRequest));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_SendRequest == nullptr) )
+		eLookupError = (*pLookup)("libgrpcwrapper_connection_sendtestmessage", (void**)&(pWrapperTable->m_Connection_SendTestMessage));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_SendTestMessage == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("libgrpcwrapper_getversion", (void**)&(pWrapperTable->m_GetVersion));
@@ -682,11 +682,11 @@ public:
 	}
 	
 	/**
-	* CConnection::SendRequest - Send a request
+	* CConnection::SendTestMessage - Send a test message
 	*/
-	void CConnection::SendRequest()
+	void CConnection::SendTestMessage()
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_Connection_SendRequest(m_pHandle));
+		CheckError(m_pWrapper->m_WrapperTable.m_Connection_SendTestMessage(m_pHandle));
 	}
 
 } // namespace LibGRPCWrapper

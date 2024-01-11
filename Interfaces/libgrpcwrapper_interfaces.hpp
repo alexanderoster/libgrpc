@@ -249,9 +249,9 @@ public:
 	virtual void Connect(const std::string & sNetworkCredentials) = 0;
 
 	/**
-	* IConnection::SendRequest - Send a request
+	* IConnection::SendTestMessage - Send a test message
 	*/
-	virtual void SendRequest() = 0;
+	virtual void SendTestMessage() = 0;
 
 };
 

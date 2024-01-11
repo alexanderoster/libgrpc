@@ -74,12 +74,12 @@ extern "C" {
 LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_connect(LibGRPCWrapper_Connection pConnection, const char * pNetworkCredentials);
 
 /**
-* Send a request
+* Send a test message
 *
 * @param[in] pConnection - Connection instance.
 * @return error code or 0 (success)
 */
-LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_sendrequest(LibGRPCWrapper_Connection pConnection);
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_sendtestmessage(LibGRPCWrapper_Connection pConnection);
 
 /*************************************************************************************************************************
  Global functions

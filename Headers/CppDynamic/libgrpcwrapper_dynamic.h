@@ -61,12 +61,12 @@ Interface version: 1.2.0
 typedef LibGRPCWrapperResult (*PLibGRPCWrapperConnection_ConnectPtr) (LibGRPCWrapper_Connection pConnection, const char * pNetworkCredentials);
 
 /**
-* Send a request
+* Send a test message
 *
 * @param[in] pConnection - Connection instance.
 * @return error code or 0 (success)
 */
-typedef LibGRPCWrapperResult (*PLibGRPCWrapperConnection_SendRequestPtr) (LibGRPCWrapper_Connection pConnection);
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperConnection_SendTestMessagePtr) (LibGRPCWrapper_Connection pConnection);
 
 /*************************************************************************************************************************
  Global functions
@@ -134,7 +134,7 @@ typedef LibGRPCWrapperResult (*PLibGRPCWrapperCreateConnectionPtr) (const char *
 typedef struct {
 	void * m_LibraryHandle;
 	PLibGRPCWrapperConnection_ConnectPtr m_Connection_Connect;
-	PLibGRPCWrapperConnection_SendRequestPtr m_Connection_SendRequest;
+	PLibGRPCWrapperConnection_SendTestMessagePtr m_Connection_SendTestMessage;
 	PLibGRPCWrapperGetVersionPtr m_GetVersion;
 	PLibGRPCWrapperGetLastErrorPtr m_GetLastError;
 	PLibGRPCWrapperAcquireInstancePtr m_AcquireInstance;
