@@ -55,7 +55,11 @@ namespace Impl {
  Forward declarations of class interfaces
 */
 class IBase;
+class IMessage;
+class IResponse;
+class IRequest;
 class IConnection;
+class IProtocol;
 
 
 
@@ -237,25 +241,151 @@ typedef IBaseSharedPtr<IBase> PIBase;
 
 
 /*************************************************************************************************************************
+ Class interface for Message 
+**************************************************************************************************************************/
+
+class IMessage : public virtual IBase {
+public:
+	/**
+	* IMessage::HasField - Returns if the request has a field of a certain name.
+	* @param[in] sFieldName - Name of the field.
+	* @return True if field exists.
+	*/
+	virtual bool HasField(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::HasStringField - Returns if the request has a field of a certain name and this field is a string field.
+	* @param[in] sFieldName - Name of the field.
+	* @return True if field exists and is of type string.
+	*/
+	virtual bool HasStringField(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetStringField - Sets a string field of the request. Fails if the field does not exist or is not a string field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] sValue - New value of the field.
+	*/
+	virtual void SetStringField(const std::string & sFieldName, const std::string & sValue) = 0;
+
+	/**
+	* IMessage::GetStringField - Gets a string field of the request. Fails if the field does not exist or is not a string field.
+	* @param[in] sFieldName - Name of the field.
+	* @return New value of the field.
+	*/
+	virtual std::string GetStringField(const std::string & sFieldName) = 0;
+
+};
+
+typedef IBaseSharedPtr<IMessage> PIMessage;
+
+
+/*************************************************************************************************************************
+ Class interface for Response 
+**************************************************************************************************************************/
+
+class IResponse : public virtual IMessage {
+public:
+	/**
+	* IResponse::GetResponseType - Returns the response type of the connection.
+	* @return Message type identifier.
+	*/
+	virtual std::string GetResponseType() = 0;
+
+};
+
+typedef IBaseSharedPtr<IResponse> PIResponse;
+
+
+/*************************************************************************************************************************
+ Class interface for Request 
+**************************************************************************************************************************/
+
+class IRequest : public virtual IMessage {
+public:
+	/**
+	* IRequest::GetRequestType - Returns the request type of the connection.
+	* @return Message type identifier.
+	*/
+	virtual std::string GetRequestType() = 0;
+
+	/**
+	* IRequest::GetExpectedResponseType - Returns the expected response type of the connection.
+	* @return Message type identifier.
+	*/
+	virtual std::string GetExpectedResponseType() = 0;
+
+	/**
+	* IRequest::SendBlocking - Sends the request to the end point and waits for a response.
+	* @param[in] sServiceMethod - Service method to call.
+	* @param[in] nTimeOutInMS - Timeout for the response in MS.
+	* @return Response Instance
+	*/
+	virtual IResponse * SendBlocking(const std::string & sServiceMethod, const LibGRPCWrapper_uint32 nTimeOutInMS) = 0;
+
+};
+
+typedef IBaseSharedPtr<IRequest> PIRequest;
+
+
+/*************************************************************************************************************************
  Class interface for Connection 
 **************************************************************************************************************************/
 
 class IConnection : public virtual IBase {
 public:
 	/**
-	* IConnection::Connect - Connects to an end point
-	* @param[in] sNetworkCredentials - Host to connect to
+	* IConnection::GetEndPoint - Returns the end point of the connection.
+	* @return End point of the connection.
 	*/
-	virtual void Connect(const std::string & sNetworkCredentials) = 0;
+	virtual std::string GetEndPoint() = 0;
 
 	/**
-	* IConnection::SendTestMessage - Send a test message
+	* IConnection::Close - Closes the connection. All subsequent calls to the connection will fail.
 	*/
-	virtual void SendTestMessage() = 0;
+	virtual void Close() = 0;
+
+	/**
+	* IConnection::CreateStaticRequest - Creates a message request to the end point.
+	* @param[in] sRequestTypeIdentifier - Message Type Identifier of the request.
+	* @param[in] sResponseTypeIdentifier - Message Type Identifier of the expected response.
+	* @return Request Instance
+	*/
+	virtual IRequest * CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier) = 0;
 
 };
 
 typedef IBaseSharedPtr<IConnection> PIConnection;
+
+
+/*************************************************************************************************************************
+ Class interface for Protocol 
+**************************************************************************************************************************/
+
+class IProtocol : public virtual IBase {
+public:
+	/**
+	* IProtocol::ConnectUnsecure - Connects to an end point
+	* @param[in] sNetworkCredentials - Host to connect to
+	* @return Connection Instance
+	*/
+	virtual IConnection * ConnectUnsecure(const std::string & sNetworkCredentials) = 0;
+
+	/**
+	* IProtocol::GetProtobufDefinition - Returns protobuf definition as string.
+	* @return Protobuf file as string.
+	*/
+	virtual std::string GetProtobufDefinition() = 0;
+
+	/**
+	* IProtocol::HasMessageType - Returns if protocol buffer has a certain message type.
+	* @param[in] sMessageTypeIdentifier - Message Type Identifier.
+	* @return Returns if message type exists.
+	*/
+	virtual bool HasMessageType(const std::string & sMessageTypeIdentifier) = 0;
+
+};
+
+typedef IBaseSharedPtr<IProtocol> PIProtocol;
 
 
 /*************************************************************************************************************************
@@ -292,11 +422,11 @@ public:
 	static void ReleaseInstance(IBase* pInstance);
 
 	/**
-	* Ilibgrpcwrapper::CreateConnection - Returns a PLC instance
-	* @param[in] sProtobufDefinition - String containing the proto definition
-	* @return Connection Instance
+	* Ilibgrpcwrapper::CreateProtocol - Returns a PLC instance
+	* @param[in] sProtoBufferDefinition - Protobuf structure definition as string.
+	* @return Protocol Instance
 	*/
-	static IConnection * CreateConnection(const std::string & sProtobufDefinition);
+	static IProtocol * CreateProtocol(const std::string & sProtoBufferDefinition);
 
 };
 

@@ -32,19 +32,13 @@ Abstract: This is the class declaration of CConnection
 */
 
 
-#ifndef __LIBGRPCWRAPPER_CONNECTION
-#define __LIBGRPCWRAPPER_CONNECTION
+#ifndef __LIBGRPCWRAPPER_CONNECTIONINSTANCE
+#define __LIBGRPCWRAPPER_CONNECTIONINSTANCE
 
-#include "libgrpcwrapper_interfaces.hpp"
-
-// Parent classes
-#include "libgrpcwrapper_base.hpp"
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4250)
-#endif
-
-// Include custom headers here.
+#include <google/protobuf/dynamic_message.h>
+#include <google/protobuf/compiler/importer.h>
+#include <grpcpp/grpcpp.h>
+#include <grpcpp/generic/generic_stub.h>
 
 
 namespace LibGRPCWrapper {
@@ -55,35 +49,62 @@ namespace Impl {
  Class declaration of CConnection 
 **************************************************************************************************************************/
 
-class CConnectionInstance;
+    class CConnectionInstance;
 
-class CConnection : public virtual IConnection, public virtual CBase {
-private:
+    class CConnectionErrorCollector : public google::protobuf::compiler::MultiFileErrorCollector
+    {
+    private:
 
-    std::string m_sProtobufDefinition;
+        std::vector<std::string> m_ErrorList;
 
-    std::string m_sEndPoint;
+    public:
 
-    std::shared_ptr<CConnectionInstance> m_pConnectionInstance;
 
-public:
+        void AddError(const std::string& filename, int line, int column, const std::string& message)
+        {
+            m_ErrorList.push_back(filename + ":" + std::to_string(line) + ":" + std::to_string(column) + " " + message);
+        }
 
-    CConnection(const std::string & sProtobufDefinition, const std::string sEndPoint);
+        std::vector<std::string> getErrors()
+        {
+            return m_ErrorList;
+        }
 
-    virtual ~CConnection();
+    };
 
-	std::string GetEndPoint() override;
 
-	void Close() override;
+    class CConnectionInstance {
+    private:
 
-	IRequest * CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier) override;
+        std::shared_ptr<grpc::Channel> m_pChannel;
 
-};
+        std::shared_ptr <google::protobuf::compiler::DiskSourceTree> m_pSourceTree;
+
+        std::shared_ptr <CConnectionErrorCollector> m_pErrorCollector;
+
+        std::shared_ptr<google::protobuf::compiler::Importer> m_pImporter;
+
+        std::shared_ptr<google::protobuf::DynamicMessageFactory> m_pMessageFactory;
+        
+        const google::protobuf::FileDescriptor* m_pFileDescriptor;
+
+    public:
+
+        CConnectionInstance(const std::string & sProtobufDefinition, const std::string sEndPoint);
+
+        virtual ~CConnectionInstance();
+
+        bool hasMessageType(const std::string & sMessageTypeName);
+
+        const google::protobuf::Descriptor* getMessageDescriptor(const std::string& sMessageTypeName);
+
+        std::shared_ptr<google::protobuf::Message> createMessage(const std::string& sMessageTypeName);
+
+        grpc::ByteBuffer sendMessageBlocking (std::shared_ptr<google::protobuf::Message> pMessage, const std::string & sServiceMethod, uint32_t nTimeoutInMS);
+    };
 
 } // namespace Impl
 } // namespace LibGRPCWrapper
 
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-#endif // __LIBGRPCWRAPPER_CONNECTION
+
+#endif // __LIBGRPCWRAPPER_CONNECTIONINSTANCE

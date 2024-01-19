@@ -60,28 +60,44 @@ namespace LibGRPCWrapper {
 **************************************************************************************************************************/
 class CWrapper;
 class CBase;
+class CMessage;
+class CResponse;
+class CRequest;
 class CConnection;
+class CProtocol;
 
 /*************************************************************************************************************************
  Declaration of deprecated class types
 **************************************************************************************************************************/
 typedef CWrapper CLibGRPCWrapperWrapper;
 typedef CBase CLibGRPCWrapperBase;
+typedef CMessage CLibGRPCWrapperMessage;
+typedef CResponse CLibGRPCWrapperResponse;
+typedef CRequest CLibGRPCWrapperRequest;
 typedef CConnection CLibGRPCWrapperConnection;
+typedef CProtocol CLibGRPCWrapperProtocol;
 
 /*************************************************************************************************************************
  Declaration of shared pointer types
 **************************************************************************************************************************/
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
+typedef std::shared_ptr<CMessage> PMessage;
+typedef std::shared_ptr<CResponse> PResponse;
+typedef std::shared_ptr<CRequest> PRequest;
 typedef std::shared_ptr<CConnection> PConnection;
+typedef std::shared_ptr<CProtocol> PProtocol;
 
 /*************************************************************************************************************************
  Declaration of deprecated shared pointer types
 **************************************************************************************************************************/
 typedef PWrapper PLibGRPCWrapperWrapper;
 typedef PBase PLibGRPCWrapperBase;
+typedef PMessage PLibGRPCWrapperMessage;
+typedef PResponse PLibGRPCWrapperResponse;
+typedef PRequest PLibGRPCWrapperRequest;
 typedef PConnection PLibGRPCWrapperConnection;
+typedef PProtocol PLibGRPCWrapperProtocol;
 
 
 /*************************************************************************************************************************
@@ -169,7 +185,20 @@ public:
 			case LIBGRPCWRAPPER_ERROR_COULDNOTLOADLIBRARY: return "COULDNOTLOADLIBRARY";
 			case LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT: return "COULDNOTFINDLIBRARYEXPORT";
 			case LIBGRPCWRAPPER_ERROR_INCOMPATIBLEBINARYVERSION: return "INCOMPATIBLEBINARYVERSION";
-			case LIBGRPCWRAPPER_ERROR_NOTCONNECTED: return "NOTCONNECTED";
+			case LIBGRPCWRAPPER_ERROR_COULDNOTCREATECHANNEL: return "COULDNOTCREATECHANNEL";
+			case LIBGRPCWRAPPER_ERROR_FAILEDTOIMPORTPROTODEFINITION: return "FAILEDTOIMPORTPROTODEFINITION";
+			case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTTYPEIDENTIFIER: return "EMPTYREQUESTTYPEIDENTIFIER";
+			case LIBGRPCWRAPPER_ERROR_INVALIDREQUESTTYPEIDENTIFIER: return "INVALIDREQUESTTYPEIDENTIFIER";
+			case LIBGRPCWRAPPER_ERROR_EMPTYRESPONSETYPEIDENTIFIER: return "EMPTYRESPONSETYPEIDENTIFIER";
+			case LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER: return "INVALIDRESPONSETYPEIDENTIFIER";
+			case LIBGRPCWRAPPER_ERROR_UNKNOWNMESSAGETYPENAME: return "UNKNOWNMESSAGETYPENAME";
+			case LIBGRPCWRAPPER_ERROR_EMPTYMESSAGETYPENAME: return "EMPTYMESSAGETYPENAME";
+			case LIBGRPCWRAPPER_ERROR_COULDNOTGETMESSAGEPROTOTYPE: return "COULDNOTGETMESSAGEPROTOTYPE";
+			case LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND: return "REQUESTFIELDNOTFOUND";
+			case LIBGRPCWRAPPER_ERROR_RESPONSEFIELDNOTFOUND: return "RESPONSEFIELDNOTFOUND";
+			case LIBGRPCWRAPPER_ERROR_EMPTYSERVICEMETHOD: return "EMPTYSERVICEMETHOD";
+			case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE: return "EMPTYREQUESTRESPONSE";
+			case LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE: return "FAILEDTOPARSEREQUESTRESPONSE";
 		}
 		return "UNKNOWN";
 	}
@@ -186,7 +215,20 @@ public:
 			case LIBGRPCWRAPPER_ERROR_COULDNOTLOADLIBRARY: return "the library could not be loaded";
 			case LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT: return "a required exported symbol could not be found in the library";
 			case LIBGRPCWRAPPER_ERROR_INCOMPATIBLEBINARYVERSION: return "the version of the binary interface does not match the bindings interface";
-			case LIBGRPCWRAPPER_ERROR_NOTCONNECTED: return "PLC is not connected";
+			case LIBGRPCWRAPPER_ERROR_COULDNOTCREATECHANNEL: return "Could not create channel.";
+			case LIBGRPCWRAPPER_ERROR_FAILEDTOIMPORTPROTODEFINITION: return "Failed to import proto definition.";
+			case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTTYPEIDENTIFIER: return "Empty request type identifier.";
+			case LIBGRPCWRAPPER_ERROR_INVALIDREQUESTTYPEIDENTIFIER: return "Invalid request type identifier.";
+			case LIBGRPCWRAPPER_ERROR_EMPTYRESPONSETYPEIDENTIFIER: return "Empty request type identifier.";
+			case LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER: return "Invalid request type identifier.";
+			case LIBGRPCWRAPPER_ERROR_UNKNOWNMESSAGETYPENAME: return "Unknown message type name.";
+			case LIBGRPCWRAPPER_ERROR_EMPTYMESSAGETYPENAME: return "Empty messsage type name.";
+			case LIBGRPCWRAPPER_ERROR_COULDNOTGETMESSAGEPROTOTYPE: return "Could not get message prototype.";
+			case LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND: return "Request field not found.";
+			case LIBGRPCWRAPPER_ERROR_RESPONSEFIELDNOTFOUND: return "Response field not found.";
+			case LIBGRPCWRAPPER_ERROR_EMPTYSERVICEMETHOD: return "Empty service method.";
+			case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE: return "Empty request response.";
+			case LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE: return "Failed to parse request response.";
 		}
 		return "unknown error";
 	}
@@ -285,7 +327,7 @@ public:
 	inline void AcquireInstance(classParam<CBase> pInstance);
 	inline void ReleaseInstance(classParam<CBase> pInstance);
 	inline LibGRPCWrapper_pvoid GetSymbolLookupMethod();
-	inline PConnection CreateConnection(const std::string & sProtobufDefinition);
+	inline PProtocol CreateProtocol(const std::string & sProtoBufferDefinition);
 
 private:
 	sLibGRPCWrapperDynamicWrapperTable m_WrapperTable;
@@ -305,7 +347,11 @@ private:
 	LibGRPCWrapperResult loadWrapperTableFromSymbolLookupMethod(sLibGRPCWrapperDynamicWrapperTable * pWrapperTable, void* pSymbolLookupMethod);
 
 	friend class CBase;
+	friend class CMessage;
+	friend class CResponse;
+	friend class CRequest;
 	friend class CConnection;
+	friend class CProtocol;
 
 };
 
@@ -367,6 +413,62 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CMessage 
+**************************************************************************************************************************/
+class CMessage : public CBase {
+public:
+	
+	/**
+	* CMessage::CMessage - Constructor for Message class.
+	*/
+	CMessage(CWrapper* pWrapper, LibGRPCWrapperHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline bool HasField(const std::string & sFieldName);
+	inline bool HasStringField(const std::string & sFieldName);
+	inline void SetStringField(const std::string & sFieldName, const std::string & sValue);
+	inline std::string GetStringField(const std::string & sFieldName);
+};
+	
+/*************************************************************************************************************************
+ Class CResponse 
+**************************************************************************************************************************/
+class CResponse : public CMessage {
+public:
+	
+	/**
+	* CResponse::CResponse - Constructor for Response class.
+	*/
+	CResponse(CWrapper* pWrapper, LibGRPCWrapperHandle pHandle)
+		: CMessage(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetResponseType();
+};
+	
+/*************************************************************************************************************************
+ Class CRequest 
+**************************************************************************************************************************/
+class CRequest : public CMessage {
+public:
+	
+	/**
+	* CRequest::CRequest - Constructor for Request class.
+	*/
+	CRequest(CWrapper* pWrapper, LibGRPCWrapperHandle pHandle)
+		: CMessage(pWrapper, pHandle)
+	{
+	}
+	
+	inline std::string GetRequestType();
+	inline std::string GetExpectedResponseType();
+	inline PResponse SendBlocking(const std::string & sServiceMethod, const LibGRPCWrapper_uint32 nTimeOutInMS);
+};
+	
+/*************************************************************************************************************************
  Class CConnection 
 **************************************************************************************************************************/
 class CConnection : public CBase {
@@ -380,8 +482,28 @@ public:
 	{
 	}
 	
-	inline void Connect(const std::string & sNetworkCredentials);
-	inline void SendTestMessage();
+	inline std::string GetEndPoint();
+	inline void Close();
+	inline PRequest CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier);
+};
+	
+/*************************************************************************************************************************
+ Class CProtocol 
+**************************************************************************************************************************/
+class CProtocol : public CBase {
+public:
+	
+	/**
+	* CProtocol::CProtocol - Constructor for Protocol class.
+	*/
+	CProtocol(CWrapper* pWrapper, LibGRPCWrapperHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline PConnection ConnectUnsecure(const std::string & sNetworkCredentials);
+	inline std::string GetProtobufDefinition();
+	inline bool HasMessageType(const std::string & sMessageTypeIdentifier);
 };
 	
 	/**
@@ -448,19 +570,19 @@ public:
 	}
 	
 	/**
-	* CWrapper::CreateConnection - Returns a PLC instance
-	* @param[in] sProtobufDefinition - String containing the proto definition
-	* @return Connection Instance
+	* CWrapper::CreateProtocol - Returns a PLC instance
+	* @param[in] sProtoBufferDefinition - Protobuf structure definition as string.
+	* @return Protocol Instance
 	*/
-	inline PConnection CWrapper::CreateConnection(const std::string & sProtobufDefinition)
+	inline PProtocol CWrapper::CreateProtocol(const std::string & sProtoBufferDefinition)
 	{
-		LibGRPCWrapperHandle hConnectionInstance = nullptr;
-		CheckError(nullptr,m_WrapperTable.m_CreateConnection(sProtobufDefinition.c_str(), &hConnectionInstance));
+		LibGRPCWrapperHandle hProtocolInstance = nullptr;
+		CheckError(nullptr,m_WrapperTable.m_CreateProtocol(sProtoBufferDefinition.c_str(), &hProtocolInstance));
 		
-		if (!hConnectionInstance) {
+		if (!hProtocolInstance) {
 			CheckError(nullptr,LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CConnection>(this, hConnectionInstance);
+		return std::make_shared<CProtocol>(this, hProtocolInstance);
 	}
 	
 	inline void CWrapper::CheckError(CBase * pBaseClass, LibGRPCWrapperResult nResult)
@@ -481,14 +603,26 @@ public:
 			return LIBGRPCWRAPPER_ERROR_INVALIDPARAM;
 		
 		pWrapperTable->m_LibraryHandle = nullptr;
-		pWrapperTable->m_Connection_Connect = nullptr;
-		pWrapperTable->m_Connection_SendTestMessage = nullptr;
+		pWrapperTable->m_Message_HasField = nullptr;
+		pWrapperTable->m_Message_HasStringField = nullptr;
+		pWrapperTable->m_Message_SetStringField = nullptr;
+		pWrapperTable->m_Message_GetStringField = nullptr;
+		pWrapperTable->m_Response_GetResponseType = nullptr;
+		pWrapperTable->m_Request_GetRequestType = nullptr;
+		pWrapperTable->m_Request_GetExpectedResponseType = nullptr;
+		pWrapperTable->m_Request_SendBlocking = nullptr;
+		pWrapperTable->m_Connection_GetEndPoint = nullptr;
+		pWrapperTable->m_Connection_Close = nullptr;
+		pWrapperTable->m_Connection_CreateStaticRequest = nullptr;
+		pWrapperTable->m_Protocol_ConnectUnsecure = nullptr;
+		pWrapperTable->m_Protocol_GetProtobufDefinition = nullptr;
+		pWrapperTable->m_Protocol_HasMessageType = nullptr;
 		pWrapperTable->m_GetVersion = nullptr;
 		pWrapperTable->m_GetLastError = nullptr;
 		pWrapperTable->m_AcquireInstance = nullptr;
 		pWrapperTable->m_ReleaseInstance = nullptr;
 		pWrapperTable->m_GetSymbolLookupMethod = nullptr;
-		pWrapperTable->m_CreateConnection = nullptr;
+		pWrapperTable->m_CreateProtocol = nullptr;
 		
 		return LIBGRPCWRAPPER_SUCCESS;
 	}
@@ -540,21 +674,129 @@ public:
 		#endif // _WIN32
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Connection_Connect = (PLibGRPCWrapperConnection_ConnectPtr) GetProcAddress(hLibrary, "libgrpcwrapper_connection_connect");
+		pWrapperTable->m_Message_HasField = (PLibGRPCWrapperMessage_HasFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_hasfield");
 		#else // _WIN32
-		pWrapperTable->m_Connection_Connect = (PLibGRPCWrapperConnection_ConnectPtr) dlsym(hLibrary, "libgrpcwrapper_connection_connect");
+		pWrapperTable->m_Message_HasField = (PLibGRPCWrapperMessage_HasFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_hasfield");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Connection_Connect == nullptr)
+		if (pWrapperTable->m_Message_HasField == nullptr)
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Connection_SendTestMessage = (PLibGRPCWrapperConnection_SendTestMessagePtr) GetProcAddress(hLibrary, "libgrpcwrapper_connection_sendtestmessage");
+		pWrapperTable->m_Message_HasStringField = (PLibGRPCWrapperMessage_HasStringFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_hasstringfield");
 		#else // _WIN32
-		pWrapperTable->m_Connection_SendTestMessage = (PLibGRPCWrapperConnection_SendTestMessagePtr) dlsym(hLibrary, "libgrpcwrapper_connection_sendtestmessage");
+		pWrapperTable->m_Message_HasStringField = (PLibGRPCWrapperMessage_HasStringFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_hasstringfield");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Connection_SendTestMessage == nullptr)
+		if (pWrapperTable->m_Message_HasStringField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetStringField = (PLibGRPCWrapperMessage_SetStringFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setstringfield");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetStringField = (PLibGRPCWrapperMessage_SetStringFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setstringfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetStringField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetStringField = (PLibGRPCWrapperMessage_GetStringFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getstringfield");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetStringField = (PLibGRPCWrapperMessage_GetStringFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getstringfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetStringField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Response_GetResponseType = (PLibGRPCWrapperResponse_GetResponseTypePtr) GetProcAddress(hLibrary, "libgrpcwrapper_response_getresponsetype");
+		#else // _WIN32
+		pWrapperTable->m_Response_GetResponseType = (PLibGRPCWrapperResponse_GetResponseTypePtr) dlsym(hLibrary, "libgrpcwrapper_response_getresponsetype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Response_GetResponseType == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Request_GetRequestType = (PLibGRPCWrapperRequest_GetRequestTypePtr) GetProcAddress(hLibrary, "libgrpcwrapper_request_getrequesttype");
+		#else // _WIN32
+		pWrapperTable->m_Request_GetRequestType = (PLibGRPCWrapperRequest_GetRequestTypePtr) dlsym(hLibrary, "libgrpcwrapper_request_getrequesttype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Request_GetRequestType == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Request_GetExpectedResponseType = (PLibGRPCWrapperRequest_GetExpectedResponseTypePtr) GetProcAddress(hLibrary, "libgrpcwrapper_request_getexpectedresponsetype");
+		#else // _WIN32
+		pWrapperTable->m_Request_GetExpectedResponseType = (PLibGRPCWrapperRequest_GetExpectedResponseTypePtr) dlsym(hLibrary, "libgrpcwrapper_request_getexpectedresponsetype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Request_GetExpectedResponseType == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Request_SendBlocking = (PLibGRPCWrapperRequest_SendBlockingPtr) GetProcAddress(hLibrary, "libgrpcwrapper_request_sendblocking");
+		#else // _WIN32
+		pWrapperTable->m_Request_SendBlocking = (PLibGRPCWrapperRequest_SendBlockingPtr) dlsym(hLibrary, "libgrpcwrapper_request_sendblocking");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Request_SendBlocking == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Connection_GetEndPoint = (PLibGRPCWrapperConnection_GetEndPointPtr) GetProcAddress(hLibrary, "libgrpcwrapper_connection_getendpoint");
+		#else // _WIN32
+		pWrapperTable->m_Connection_GetEndPoint = (PLibGRPCWrapperConnection_GetEndPointPtr) dlsym(hLibrary, "libgrpcwrapper_connection_getendpoint");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Connection_GetEndPoint == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Connection_Close = (PLibGRPCWrapperConnection_ClosePtr) GetProcAddress(hLibrary, "libgrpcwrapper_connection_close");
+		#else // _WIN32
+		pWrapperTable->m_Connection_Close = (PLibGRPCWrapperConnection_ClosePtr) dlsym(hLibrary, "libgrpcwrapper_connection_close");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Connection_Close == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Connection_CreateStaticRequest = (PLibGRPCWrapperConnection_CreateStaticRequestPtr) GetProcAddress(hLibrary, "libgrpcwrapper_connection_createstaticrequest");
+		#else // _WIN32
+		pWrapperTable->m_Connection_CreateStaticRequest = (PLibGRPCWrapperConnection_CreateStaticRequestPtr) dlsym(hLibrary, "libgrpcwrapper_connection_createstaticrequest");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Connection_CreateStaticRequest == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Protocol_ConnectUnsecure = (PLibGRPCWrapperProtocol_ConnectUnsecurePtr) GetProcAddress(hLibrary, "libgrpcwrapper_protocol_connectunsecure");
+		#else // _WIN32
+		pWrapperTable->m_Protocol_ConnectUnsecure = (PLibGRPCWrapperProtocol_ConnectUnsecurePtr) dlsym(hLibrary, "libgrpcwrapper_protocol_connectunsecure");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Protocol_ConnectUnsecure == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Protocol_GetProtobufDefinition = (PLibGRPCWrapperProtocol_GetProtobufDefinitionPtr) GetProcAddress(hLibrary, "libgrpcwrapper_protocol_getprotobufdefinition");
+		#else // _WIN32
+		pWrapperTable->m_Protocol_GetProtobufDefinition = (PLibGRPCWrapperProtocol_GetProtobufDefinitionPtr) dlsym(hLibrary, "libgrpcwrapper_protocol_getprotobufdefinition");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Protocol_GetProtobufDefinition == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Protocol_HasMessageType = (PLibGRPCWrapperProtocol_HasMessageTypePtr) GetProcAddress(hLibrary, "libgrpcwrapper_protocol_hasmessagetype");
+		#else // _WIN32
+		pWrapperTable->m_Protocol_HasMessageType = (PLibGRPCWrapperProtocol_HasMessageTypePtr) dlsym(hLibrary, "libgrpcwrapper_protocol_hasmessagetype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Protocol_HasMessageType == nullptr)
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -603,12 +845,12 @@ public:
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_CreateConnection = (PLibGRPCWrapperCreateConnectionPtr) GetProcAddress(hLibrary, "libgrpcwrapper_createconnection");
+		pWrapperTable->m_CreateProtocol = (PLibGRPCWrapperCreateProtocolPtr) GetProcAddress(hLibrary, "libgrpcwrapper_createprotocol");
 		#else // _WIN32
-		pWrapperTable->m_CreateConnection = (PLibGRPCWrapperCreateConnectionPtr) dlsym(hLibrary, "libgrpcwrapper_createconnection");
+		pWrapperTable->m_CreateProtocol = (PLibGRPCWrapperCreateProtocolPtr) dlsym(hLibrary, "libgrpcwrapper_createprotocol");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_CreateConnection == nullptr)
+		if (pWrapperTable->m_CreateProtocol == nullptr)
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		pWrapperTable->m_LibraryHandle = hLibrary;
@@ -627,12 +869,60 @@ public:
 		SymbolLookupType pLookup = (SymbolLookupType)pSymbolLookupMethod;
 		
 		LibGRPCWrapperResult eLookupError = LIBGRPCWRAPPER_SUCCESS;
-		eLookupError = (*pLookup)("libgrpcwrapper_connection_connect", (void**)&(pWrapperTable->m_Connection_Connect));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_Connect == nullptr) )
+		eLookupError = (*pLookup)("libgrpcwrapper_message_hasfield", (void**)&(pWrapperTable->m_Message_HasField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_HasField == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("libgrpcwrapper_connection_sendtestmessage", (void**)&(pWrapperTable->m_Connection_SendTestMessage));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_SendTestMessage == nullptr) )
+		eLookupError = (*pLookup)("libgrpcwrapper_message_hasstringfield", (void**)&(pWrapperTable->m_Message_HasStringField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_HasStringField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setstringfield", (void**)&(pWrapperTable->m_Message_SetStringField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetStringField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getstringfield", (void**)&(pWrapperTable->m_Message_GetStringField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetStringField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_response_getresponsetype", (void**)&(pWrapperTable->m_Response_GetResponseType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Response_GetResponseType == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_request_getrequesttype", (void**)&(pWrapperTable->m_Request_GetRequestType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Request_GetRequestType == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_request_getexpectedresponsetype", (void**)&(pWrapperTable->m_Request_GetExpectedResponseType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Request_GetExpectedResponseType == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_request_sendblocking", (void**)&(pWrapperTable->m_Request_SendBlocking));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Request_SendBlocking == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_connection_getendpoint", (void**)&(pWrapperTable->m_Connection_GetEndPoint));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_GetEndPoint == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_connection_close", (void**)&(pWrapperTable->m_Connection_Close));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_Close == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_connection_createstaticrequest", (void**)&(pWrapperTable->m_Connection_CreateStaticRequest));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Connection_CreateStaticRequest == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_protocol_connectunsecure", (void**)&(pWrapperTable->m_Protocol_ConnectUnsecure));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Protocol_ConnectUnsecure == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_protocol_getprotobufdefinition", (void**)&(pWrapperTable->m_Protocol_GetProtobufDefinition));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Protocol_GetProtobufDefinition == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_protocol_hasmessagetype", (void**)&(pWrapperTable->m_Protocol_HasMessageType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Protocol_HasMessageType == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("libgrpcwrapper_getversion", (void**)&(pWrapperTable->m_GetVersion));
@@ -655,8 +945,8 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_GetSymbolLookupMethod == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("libgrpcwrapper_createconnection", (void**)&(pWrapperTable->m_CreateConnection));
-		if ( (eLookupError != 0) || (pWrapperTable->m_CreateConnection == nullptr) )
+		eLookupError = (*pLookup)("libgrpcwrapper_createprotocol", (void**)&(pWrapperTable->m_CreateProtocol));
+		if ( (eLookupError != 0) || (pWrapperTable->m_CreateProtocol == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		return LIBGRPCWRAPPER_SUCCESS;
@@ -669,24 +959,221 @@ public:
 	 */
 	
 	/**
+	 * Method definitions for class CMessage
+	 */
+	
+	/**
+	* CMessage::HasField - Returns if the request has a field of a certain name.
+	* @param[in] sFieldName - Name of the field.
+	* @return True if field exists.
+	*/
+	bool CMessage::HasField(const std::string & sFieldName)
+	{
+		bool resultFieldeExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_HasField(m_pHandle, sFieldName.c_str(), &resultFieldeExists));
+		
+		return resultFieldeExists;
+	}
+	
+	/**
+	* CMessage::HasStringField - Returns if the request has a field of a certain name and this field is a string field.
+	* @param[in] sFieldName - Name of the field.
+	* @return True if field exists and is of type string.
+	*/
+	bool CMessage::HasStringField(const std::string & sFieldName)
+	{
+		bool resultStringFieldExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_HasStringField(m_pHandle, sFieldName.c_str(), &resultStringFieldExists));
+		
+		return resultStringFieldExists;
+	}
+	
+	/**
+	* CMessage::SetStringField - Sets a string field of the request. Fails if the field does not exist or is not a string field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] sValue - New value of the field.
+	*/
+	void CMessage::SetStringField(const std::string & sFieldName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetStringField(m_pHandle, sFieldName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CMessage::GetStringField - Gets a string field of the request. Fails if the field does not exist or is not a string field.
+	* @param[in] sFieldName - Name of the field.
+	* @return New value of the field.
+	*/
+	std::string CMessage::GetStringField(const std::string & sFieldName)
+	{
+		LibGRPCWrapper_uint32 bytesNeededValue = 0;
+		LibGRPCWrapper_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetStringField(m_pHandle, sFieldName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetStringField(m_pHandle, sFieldName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	 * Method definitions for class CResponse
+	 */
+	
+	/**
+	* CResponse::GetResponseType - Returns the response type of the connection.
+	* @return Message type identifier.
+	*/
+	std::string CResponse::GetResponseType()
+	{
+		LibGRPCWrapper_uint32 bytesNeededResponseType = 0;
+		LibGRPCWrapper_uint32 bytesWrittenResponseType = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Response_GetResponseType(m_pHandle, 0, &bytesNeededResponseType, nullptr));
+		std::vector<char> bufferResponseType(bytesNeededResponseType);
+		CheckError(m_pWrapper->m_WrapperTable.m_Response_GetResponseType(m_pHandle, bytesNeededResponseType, &bytesWrittenResponseType, &bufferResponseType[0]));
+		
+		return std::string(&bufferResponseType[0]);
+	}
+	
+	/**
+	 * Method definitions for class CRequest
+	 */
+	
+	/**
+	* CRequest::GetRequestType - Returns the request type of the connection.
+	* @return Message type identifier.
+	*/
+	std::string CRequest::GetRequestType()
+	{
+		LibGRPCWrapper_uint32 bytesNeededRequestType = 0;
+		LibGRPCWrapper_uint32 bytesWrittenRequestType = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Request_GetRequestType(m_pHandle, 0, &bytesNeededRequestType, nullptr));
+		std::vector<char> bufferRequestType(bytesNeededRequestType);
+		CheckError(m_pWrapper->m_WrapperTable.m_Request_GetRequestType(m_pHandle, bytesNeededRequestType, &bytesWrittenRequestType, &bufferRequestType[0]));
+		
+		return std::string(&bufferRequestType[0]);
+	}
+	
+	/**
+	* CRequest::GetExpectedResponseType - Returns the expected response type of the connection.
+	* @return Message type identifier.
+	*/
+	std::string CRequest::GetExpectedResponseType()
+	{
+		LibGRPCWrapper_uint32 bytesNeededExpectedResponseType = 0;
+		LibGRPCWrapper_uint32 bytesWrittenExpectedResponseType = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Request_GetExpectedResponseType(m_pHandle, 0, &bytesNeededExpectedResponseType, nullptr));
+		std::vector<char> bufferExpectedResponseType(bytesNeededExpectedResponseType);
+		CheckError(m_pWrapper->m_WrapperTable.m_Request_GetExpectedResponseType(m_pHandle, bytesNeededExpectedResponseType, &bytesWrittenExpectedResponseType, &bufferExpectedResponseType[0]));
+		
+		return std::string(&bufferExpectedResponseType[0]);
+	}
+	
+	/**
+	* CRequest::SendBlocking - Sends the request to the end point and waits for a response.
+	* @param[in] sServiceMethod - Service method to call.
+	* @param[in] nTimeOutInMS - Timeout for the response in MS.
+	* @return Response Instance
+	*/
+	PResponse CRequest::SendBlocking(const std::string & sServiceMethod, const LibGRPCWrapper_uint32 nTimeOutInMS)
+	{
+		LibGRPCWrapperHandle hResponseInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Request_SendBlocking(m_pHandle, sServiceMethod.c_str(), nTimeOutInMS, &hResponseInstance));
+		
+		if (!hResponseInstance) {
+			CheckError(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CResponse>(m_pWrapper, hResponseInstance);
+	}
+	
+	/**
 	 * Method definitions for class CConnection
 	 */
 	
 	/**
-	* CConnection::Connect - Connects to an end point
-	* @param[in] sNetworkCredentials - Host to connect to
+	* CConnection::GetEndPoint - Returns the end point of the connection.
+	* @return End point of the connection.
 	*/
-	void CConnection::Connect(const std::string & sNetworkCredentials)
+	std::string CConnection::GetEndPoint()
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_Connection_Connect(m_pHandle, sNetworkCredentials.c_str()));
+		LibGRPCWrapper_uint32 bytesNeededEndPoint = 0;
+		LibGRPCWrapper_uint32 bytesWrittenEndPoint = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Connection_GetEndPoint(m_pHandle, 0, &bytesNeededEndPoint, nullptr));
+		std::vector<char> bufferEndPoint(bytesNeededEndPoint);
+		CheckError(m_pWrapper->m_WrapperTable.m_Connection_GetEndPoint(m_pHandle, bytesNeededEndPoint, &bytesWrittenEndPoint, &bufferEndPoint[0]));
+		
+		return std::string(&bufferEndPoint[0]);
 	}
 	
 	/**
-	* CConnection::SendTestMessage - Send a test message
+	* CConnection::Close - Closes the connection. All subsequent calls to the connection will fail.
 	*/
-	void CConnection::SendTestMessage()
+	void CConnection::Close()
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_Connection_SendTestMessage(m_pHandle));
+		CheckError(m_pWrapper->m_WrapperTable.m_Connection_Close(m_pHandle));
+	}
+	
+	/**
+	* CConnection::CreateStaticRequest - Creates a message request to the end point.
+	* @param[in] sRequestTypeIdentifier - Message Type Identifier of the request.
+	* @param[in] sResponseTypeIdentifier - Message Type Identifier of the expected response.
+	* @return Request Instance
+	*/
+	PRequest CConnection::CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier)
+	{
+		LibGRPCWrapperHandle hRequestInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Connection_CreateStaticRequest(m_pHandle, sRequestTypeIdentifier.c_str(), sResponseTypeIdentifier.c_str(), &hRequestInstance));
+		
+		if (!hRequestInstance) {
+			CheckError(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CRequest>(m_pWrapper, hRequestInstance);
+	}
+	
+	/**
+	 * Method definitions for class CProtocol
+	 */
+	
+	/**
+	* CProtocol::ConnectUnsecure - Connects to an end point
+	* @param[in] sNetworkCredentials - Host to connect to
+	* @return Connection Instance
+	*/
+	PConnection CProtocol::ConnectUnsecure(const std::string & sNetworkCredentials)
+	{
+		LibGRPCWrapperHandle hConnectionInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Protocol_ConnectUnsecure(m_pHandle, sNetworkCredentials.c_str(), &hConnectionInstance));
+		
+		if (!hConnectionInstance) {
+			CheckError(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CConnection>(m_pWrapper, hConnectionInstance);
+	}
+	
+	/**
+	* CProtocol::GetProtobufDefinition - Returns protobuf definition as string.
+	* @return Protobuf file as string.
+	*/
+	std::string CProtocol::GetProtobufDefinition()
+	{
+		LibGRPCWrapper_uint32 bytesNeededProtobufDefinition = 0;
+		LibGRPCWrapper_uint32 bytesWrittenProtobufDefinition = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Protocol_GetProtobufDefinition(m_pHandle, 0, &bytesNeededProtobufDefinition, nullptr));
+		std::vector<char> bufferProtobufDefinition(bytesNeededProtobufDefinition);
+		CheckError(m_pWrapper->m_WrapperTable.m_Protocol_GetProtobufDefinition(m_pHandle, bytesNeededProtobufDefinition, &bytesWrittenProtobufDefinition, &bufferProtobufDefinition[0]));
+		
+		return std::string(&bufferProtobufDefinition[0]);
+	}
+	
+	/**
+	* CProtocol::HasMessageType - Returns if protocol buffer has a certain message type.
+	* @param[in] sMessageTypeIdentifier - Message Type Identifier.
+	* @return Returns if message type exists.
+	*/
+	bool CProtocol::HasMessageType(const std::string & sMessageTypeIdentifier)
+	{
+		bool resultExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Protocol_HasMessageType(m_pHandle, sMessageTypeIdentifier.c_str(), &resultExists));
+		
+		return resultExists;
 	}
 
 } // namespace LibGRPCWrapper

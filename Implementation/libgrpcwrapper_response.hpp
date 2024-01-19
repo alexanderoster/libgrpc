@@ -27,46 +27,67 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-Abstract: This is a stub class definition of CConnection
+Abstract: This is the class declaration of CResponse
 
 */
 
-#include "libgrpcwrapper_connection.hpp"
-#include "libgrpcwrapper_interfaceexception.hpp"
+
+#ifndef __LIBGRPCWRAPPER_RESPONSE
+#define __LIBGRPCWRAPPER_RESPONSE
+
+#include "libgrpcwrapper_interfaces.hpp"
+
+// Parent classes
+#include "libgrpcwrapper_message.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 #include "libgrpcwrapper_connectioninstance.hpp"
-#include "libgrpcwrapper_request.hpp"
 
-using namespace LibGRPCWrapper::Impl;
+
+namespace LibGRPCWrapper {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CConnection 
+ Class declaration of CResponse 
 **************************************************************************************************************************/
 
-CConnection::CConnection(const std::string& sProtobufDefinition, const std::string sEndPoint)
-    : m_sProtobufDefinition (sProtobufDefinition), m_sEndPoint (sEndPoint)
-{
-    m_pConnectionInstance = std::make_shared<CConnectionInstance>(sProtobufDefinition, sEndPoint);
-}
+class CResponse : public virtual IResponse, public virtual CMessage {
+private:
+    std::shared_ptr<CConnectionInstance> m_pConnectionInstance;
 
-CConnection::~CConnection()
-{
+    std::string m_sResponseTypeIdentifier;
 
-}
+    const google::protobuf::Descriptor* m_pResponseMessageDescriptor;
+    std::shared_ptr<google::protobuf::Message> m_pResponseMessage;
+    const google::protobuf::Reflection* m_pResponseReflection;
 
-std::string CConnection::GetEndPoint()
-{
-    return m_sEndPoint;
-}
+public:
 
-void CConnection::Close()
-{
-}
+    CResponse(std::shared_ptr<CConnectionInstance> pConnectionInstance, const std::string& sResponseTypeIdentifier, const grpc::ByteBuffer & byteBuffer);
 
-IRequest * CConnection::CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier)
-{
+    virtual ~CResponse();
 
-    return new CRequest(m_pConnectionInstance, sRequestTypeIdentifier, sResponseTypeIdentifier);
-}
+	std::string GetResponseType() override;
 
+	bool HasField(const std::string& sFieldName) override;
+
+	bool HasStringField(const std::string& sFieldName) override;
+
+	void SetStringField(const std::string& sFieldName, const std::string& sValue) override;
+
+	std::string GetStringField(const std::string& sFieldName) override;
+
+};
+
+} // namespace Impl
+} // namespace LibGRPCWrapper
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIBGRPCWRAPPER_RESPONSE

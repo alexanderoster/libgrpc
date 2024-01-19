@@ -27,46 +27,46 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-Abstract: This is a stub class definition of CConnection
+Abstract: This is a stub class definition of CProtocol
 
 */
 
-#include "libgrpcwrapper_connection.hpp"
+#include "libgrpcwrapper_protocol.hpp"
 #include "libgrpcwrapper_interfaceexception.hpp"
+#include "libgrpcwrapper_connection.hpp"
 
 // Include custom headers here.
-#include "libgrpcwrapper_connectioninstance.hpp"
-#include "libgrpcwrapper_request.hpp"
+
 
 using namespace LibGRPCWrapper::Impl;
 
 /*************************************************************************************************************************
- Class definition of CConnection 
+ Class definition of CProtocol 
 **************************************************************************************************************************/
 
-CConnection::CConnection(const std::string& sProtobufDefinition, const std::string sEndPoint)
-    : m_sProtobufDefinition (sProtobufDefinition), m_sEndPoint (sEndPoint)
-{
-    m_pConnectionInstance = std::make_shared<CConnectionInstance>(sProtobufDefinition, sEndPoint);
-}
-
-CConnection::~CConnection()
+CProtocol::CProtocol(const std::string& sProtobufDefinition)
+    : m_sProtobufDefinition (sProtobufDefinition)
 {
 
 }
 
-std::string CConnection::GetEndPoint()
+CProtocol::~CProtocol()
 {
-    return m_sEndPoint;
+
 }
 
-void CConnection::Close()
+IConnection * CProtocol::ConnectUnsecure(const std::string & sNetworkCredentials)
 {
+    return new CConnection(m_sProtobufDefinition, sNetworkCredentials);
 }
 
-IRequest * CConnection::CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier)
+std::string CProtocol::GetProtobufDefinition()
 {
+    return m_sProtobufDefinition;
+}
 
-    return new CRequest(m_pConnectionInstance, sRequestTypeIdentifier, sResponseTypeIdentifier);
+bool CProtocol::HasMessageType(const std::string & sMessageTypeIdentifier)
+{
+	throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_NOTIMPLEMENTED);
 }
 

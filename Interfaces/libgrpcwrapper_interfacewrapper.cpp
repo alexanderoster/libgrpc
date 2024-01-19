@@ -93,26 +93,106 @@ LibGRPCWrapperResult handleUnhandledException(IBase * pIBaseClass, CLibGRPCWrapp
 **************************************************************************************************************************/
 
 /*************************************************************************************************************************
- Class implementation for Connection
+ Class implementation for Message
 **************************************************************************************************************************/
-LibGRPCWrapperResult libgrpcwrapper_connection_connect(LibGRPCWrapper_Connection pConnection, const char * pNetworkCredentials)
+LibGRPCWrapperResult libgrpcwrapper_message_hasfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pFieldeExists)
 {
-	IBase* pIBaseClass = (IBase *)pConnection;
+	IBase* pIBaseClass = (IBase *)pMessage;
 
 	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pConnection, "Connection", "Connect");
-			pJournalEntry->addStringParameter("NetworkCredentials", pNetworkCredentials);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "HasField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
 		}
-		if (pNetworkCredentials == nullptr)
+		if (pFieldName == nullptr)
 			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
-		std::string sNetworkCredentials(pNetworkCredentials);
-		IConnection* pIConnection = dynamic_cast<IConnection*>(pIBaseClass);
-		if (!pIConnection)
+		if (pFieldeExists == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
 			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
 		
-		pIConnection->Connect(sNetworkCredentials);
+		*pFieldeExists = pIMessage->HasField(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("FieldeExists", *pFieldeExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_hasstringfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pStringFieldExists)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "HasStringField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pStringFieldExists == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pStringFieldExists = pIMessage->HasStringField(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("StringFieldExists", *pStringFieldExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setstringfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, const char * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetStringField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addStringParameter("Value", pValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		std::string sValue(pValue);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetStringField(sFieldName, sValue);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -130,22 +210,541 @@ LibGRPCWrapperResult libgrpcwrapper_connection_connect(LibGRPCWrapper_Connection
 	}
 }
 
-LibGRPCWrapperResult libgrpcwrapper_connection_sendtestmessage(LibGRPCWrapper_Connection pConnection)
+LibGRPCWrapperResult libgrpcwrapper_message_getstringfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, const LibGRPCWrapper_uint32 nValueBufferSize, LibGRPCWrapper_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetStringField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if ( (!pValueBuffer) && !(pValueNeededChars) )
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		std::string sValue("");
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pValueBuffer == nullptr);
+		if (isCacheCall) {
+			sValue = pIMessage->GetStringField(sFieldName);
+
+			pIMessage->_setCache (new ParameterCache_1<std::string> (sValue));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIMessage->_getCache ());
+			if (cache == nullptr)
+				throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+			cache->retrieveData (sValue);
+			pIMessage->_setCache (nullptr);
+		}
+		
+		if (pValueNeededChars)
+			*pValueNeededChars = (LibGRPCWrapper_uint32) (sValue.size()+1);
+		if (pValueBuffer) {
+			if (sValue.size() >= nValueBufferSize)
+				throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_BUFFERTOOSMALL);
+			for (size_t iValue = 0; iValue < sValue.size(); iValue++)
+				pValueBuffer[iValue] = sValue[iValue];
+			pValueBuffer[sValue.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Value", sValue.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Response
+**************************************************************************************************************************/
+LibGRPCWrapperResult libgrpcwrapper_response_getresponsetype(LibGRPCWrapper_Response pResponse, const LibGRPCWrapper_uint32 nResponseTypeBufferSize, LibGRPCWrapper_uint32* pResponseTypeNeededChars, char * pResponseTypeBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pResponse;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResponse, "Response", "GetResponseType");
+		}
+		if ( (!pResponseTypeBuffer) && !(pResponseTypeNeededChars) )
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sResponseType("");
+		IResponse* pIResponse = dynamic_cast<IResponse*>(pIBaseClass);
+		if (!pIResponse)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pResponseTypeBuffer == nullptr);
+		if (isCacheCall) {
+			sResponseType = pIResponse->GetResponseType();
+
+			pIResponse->_setCache (new ParameterCache_1<std::string> (sResponseType));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIResponse->_getCache ());
+			if (cache == nullptr)
+				throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+			cache->retrieveData (sResponseType);
+			pIResponse->_setCache (nullptr);
+		}
+		
+		if (pResponseTypeNeededChars)
+			*pResponseTypeNeededChars = (LibGRPCWrapper_uint32) (sResponseType.size()+1);
+		if (pResponseTypeBuffer) {
+			if (sResponseType.size() >= nResponseTypeBufferSize)
+				throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_BUFFERTOOSMALL);
+			for (size_t iResponseType = 0; iResponseType < sResponseType.size(); iResponseType++)
+				pResponseTypeBuffer[iResponseType] = sResponseType[iResponseType];
+			pResponseTypeBuffer[sResponseType.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("ResponseType", sResponseType.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Request
+**************************************************************************************************************************/
+LibGRPCWrapperResult libgrpcwrapper_request_getrequesttype(LibGRPCWrapper_Request pRequest, const LibGRPCWrapper_uint32 nRequestTypeBufferSize, LibGRPCWrapper_uint32* pRequestTypeNeededChars, char * pRequestTypeBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pRequest;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pRequest, "Request", "GetRequestType");
+		}
+		if ( (!pRequestTypeBuffer) && !(pRequestTypeNeededChars) )
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sRequestType("");
+		IRequest* pIRequest = dynamic_cast<IRequest*>(pIBaseClass);
+		if (!pIRequest)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pRequestTypeBuffer == nullptr);
+		if (isCacheCall) {
+			sRequestType = pIRequest->GetRequestType();
+
+			pIRequest->_setCache (new ParameterCache_1<std::string> (sRequestType));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIRequest->_getCache ());
+			if (cache == nullptr)
+				throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+			cache->retrieveData (sRequestType);
+			pIRequest->_setCache (nullptr);
+		}
+		
+		if (pRequestTypeNeededChars)
+			*pRequestTypeNeededChars = (LibGRPCWrapper_uint32) (sRequestType.size()+1);
+		if (pRequestTypeBuffer) {
+			if (sRequestType.size() >= nRequestTypeBufferSize)
+				throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_BUFFERTOOSMALL);
+			for (size_t iRequestType = 0; iRequestType < sRequestType.size(); iRequestType++)
+				pRequestTypeBuffer[iRequestType] = sRequestType[iRequestType];
+			pRequestTypeBuffer[sRequestType.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("RequestType", sRequestType.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_request_getexpectedresponsetype(LibGRPCWrapper_Request pRequest, const LibGRPCWrapper_uint32 nExpectedResponseTypeBufferSize, LibGRPCWrapper_uint32* pExpectedResponseTypeNeededChars, char * pExpectedResponseTypeBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pRequest;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pRequest, "Request", "GetExpectedResponseType");
+		}
+		if ( (!pExpectedResponseTypeBuffer) && !(pExpectedResponseTypeNeededChars) )
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sExpectedResponseType("");
+		IRequest* pIRequest = dynamic_cast<IRequest*>(pIBaseClass);
+		if (!pIRequest)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pExpectedResponseTypeBuffer == nullptr);
+		if (isCacheCall) {
+			sExpectedResponseType = pIRequest->GetExpectedResponseType();
+
+			pIRequest->_setCache (new ParameterCache_1<std::string> (sExpectedResponseType));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIRequest->_getCache ());
+			if (cache == nullptr)
+				throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+			cache->retrieveData (sExpectedResponseType);
+			pIRequest->_setCache (nullptr);
+		}
+		
+		if (pExpectedResponseTypeNeededChars)
+			*pExpectedResponseTypeNeededChars = (LibGRPCWrapper_uint32) (sExpectedResponseType.size()+1);
+		if (pExpectedResponseTypeBuffer) {
+			if (sExpectedResponseType.size() >= nExpectedResponseTypeBufferSize)
+				throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_BUFFERTOOSMALL);
+			for (size_t iExpectedResponseType = 0; iExpectedResponseType < sExpectedResponseType.size(); iExpectedResponseType++)
+				pExpectedResponseTypeBuffer[iExpectedResponseType] = sExpectedResponseType[iExpectedResponseType];
+			pExpectedResponseTypeBuffer[sExpectedResponseType.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("ExpectedResponseType", sExpectedResponseType.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_request_sendblocking(LibGRPCWrapper_Request pRequest, const char * pServiceMethod, LibGRPCWrapper_uint32 nTimeOutInMS, LibGRPCWrapper_Response * pResponseInstance)
+{
+	IBase* pIBaseClass = (IBase *)pRequest;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pRequest, "Request", "SendBlocking");
+			pJournalEntry->addStringParameter("ServiceMethod", pServiceMethod);
+			pJournalEntry->addUInt32Parameter("TimeOutInMS", nTimeOutInMS);
+		}
+		if (pServiceMethod == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pResponseInstance == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sServiceMethod(pServiceMethod);
+		IBase* pBaseResponseInstance(nullptr);
+		IRequest* pIRequest = dynamic_cast<IRequest*>(pIBaseClass);
+		if (!pIRequest)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pBaseResponseInstance = pIRequest->SendBlocking(sServiceMethod, nTimeOutInMS);
+
+		*pResponseInstance = (IBase*)(pBaseResponseInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResponseInstance", *pResponseInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Connection
+**************************************************************************************************************************/
+LibGRPCWrapperResult libgrpcwrapper_connection_getendpoint(LibGRPCWrapper_Connection pConnection, const LibGRPCWrapper_uint32 nEndPointBufferSize, LibGRPCWrapper_uint32* pEndPointNeededChars, char * pEndPointBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pConnection;
 
 	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pConnection, "Connection", "SendTestMessage");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConnection, "Connection", "GetEndPoint");
+		}
+		if ( (!pEndPointBuffer) && !(pEndPointNeededChars) )
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sEndPoint("");
+		IConnection* pIConnection = dynamic_cast<IConnection*>(pIBaseClass);
+		if (!pIConnection)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pEndPointBuffer == nullptr);
+		if (isCacheCall) {
+			sEndPoint = pIConnection->GetEndPoint();
+
+			pIConnection->_setCache (new ParameterCache_1<std::string> (sEndPoint));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIConnection->_getCache ());
+			if (cache == nullptr)
+				throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+			cache->retrieveData (sEndPoint);
+			pIConnection->_setCache (nullptr);
+		}
+		
+		if (pEndPointNeededChars)
+			*pEndPointNeededChars = (LibGRPCWrapper_uint32) (sEndPoint.size()+1);
+		if (pEndPointBuffer) {
+			if (sEndPoint.size() >= nEndPointBufferSize)
+				throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_BUFFERTOOSMALL);
+			for (size_t iEndPoint = 0; iEndPoint < sEndPoint.size(); iEndPoint++)
+				pEndPointBuffer[iEndPoint] = sEndPoint[iEndPoint];
+			pEndPointBuffer[sEndPoint.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("EndPoint", sEndPoint.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_connection_close(LibGRPCWrapper_Connection pConnection)
+{
+	IBase* pIBaseClass = (IBase *)pConnection;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConnection, "Connection", "Close");
 		}
 		IConnection* pIConnection = dynamic_cast<IConnection*>(pIBaseClass);
 		if (!pIConnection)
 			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
 		
-		pIConnection->SendTestMessage();
+		pIConnection->Close();
 
 		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_connection_createstaticrequest(LibGRPCWrapper_Connection pConnection, const char * pRequestTypeIdentifier, const char * pResponseTypeIdentifier, LibGRPCWrapper_Request * pRequestInstance)
+{
+	IBase* pIBaseClass = (IBase *)pConnection;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pConnection, "Connection", "CreateStaticRequest");
+			pJournalEntry->addStringParameter("RequestTypeIdentifier", pRequestTypeIdentifier);
+			pJournalEntry->addStringParameter("ResponseTypeIdentifier", pResponseTypeIdentifier);
+		}
+		if (pRequestTypeIdentifier == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pResponseTypeIdentifier == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pRequestInstance == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sRequestTypeIdentifier(pRequestTypeIdentifier);
+		std::string sResponseTypeIdentifier(pResponseTypeIdentifier);
+		IBase* pBaseRequestInstance(nullptr);
+		IConnection* pIConnection = dynamic_cast<IConnection*>(pIBaseClass);
+		if (!pIConnection)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pBaseRequestInstance = pIConnection->CreateStaticRequest(sRequestTypeIdentifier, sResponseTypeIdentifier);
+
+		*pRequestInstance = (IBase*)(pBaseRequestInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("RequestInstance", *pRequestInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Protocol
+**************************************************************************************************************************/
+LibGRPCWrapperResult libgrpcwrapper_protocol_connectunsecure(LibGRPCWrapper_Protocol pProtocol, const char * pNetworkCredentials, LibGRPCWrapper_Connection * pConnectionInstance)
+{
+	IBase* pIBaseClass = (IBase *)pProtocol;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pProtocol, "Protocol", "ConnectUnsecure");
+			pJournalEntry->addStringParameter("NetworkCredentials", pNetworkCredentials);
+		}
+		if (pNetworkCredentials == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pConnectionInstance == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sNetworkCredentials(pNetworkCredentials);
+		IBase* pBaseConnectionInstance(nullptr);
+		IProtocol* pIProtocol = dynamic_cast<IProtocol*>(pIBaseClass);
+		if (!pIProtocol)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pBaseConnectionInstance = pIProtocol->ConnectUnsecure(sNetworkCredentials);
+
+		*pConnectionInstance = (IBase*)(pBaseConnectionInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ConnectionInstance", *pConnectionInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_protocol_getprotobufdefinition(LibGRPCWrapper_Protocol pProtocol, const LibGRPCWrapper_uint32 nProtobufDefinitionBufferSize, LibGRPCWrapper_uint32* pProtobufDefinitionNeededChars, char * pProtobufDefinitionBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pProtocol;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pProtocol, "Protocol", "GetProtobufDefinition");
+		}
+		if ( (!pProtobufDefinitionBuffer) && !(pProtobufDefinitionNeededChars) )
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sProtobufDefinition("");
+		IProtocol* pIProtocol = dynamic_cast<IProtocol*>(pIBaseClass);
+		if (!pIProtocol)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pProtobufDefinitionBuffer == nullptr);
+		if (isCacheCall) {
+			sProtobufDefinition = pIProtocol->GetProtobufDefinition();
+
+			pIProtocol->_setCache (new ParameterCache_1<std::string> (sProtobufDefinition));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIProtocol->_getCache ());
+			if (cache == nullptr)
+				throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+			cache->retrieveData (sProtobufDefinition);
+			pIProtocol->_setCache (nullptr);
+		}
+		
+		if (pProtobufDefinitionNeededChars)
+			*pProtobufDefinitionNeededChars = (LibGRPCWrapper_uint32) (sProtobufDefinition.size()+1);
+		if (pProtobufDefinitionBuffer) {
+			if (sProtobufDefinition.size() >= nProtobufDefinitionBufferSize)
+				throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_BUFFERTOOSMALL);
+			for (size_t iProtobufDefinition = 0; iProtobufDefinition < sProtobufDefinition.size(); iProtobufDefinition++)
+				pProtobufDefinitionBuffer[iProtobufDefinition] = sProtobufDefinition[iProtobufDefinition];
+			pProtobufDefinitionBuffer[sProtobufDefinition.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("ProtobufDefinition", sProtobufDefinition.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_protocol_hasmessagetype(LibGRPCWrapper_Protocol pProtocol, const char * pMessageTypeIdentifier, bool * pExists)
+{
+	IBase* pIBaseClass = (IBase *)pProtocol;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pProtocol, "Protocol", "HasMessageType");
+			pJournalEntry->addStringParameter("MessageTypeIdentifier", pMessageTypeIdentifier);
+		}
+		if (pMessageTypeIdentifier == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pExists == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sMessageTypeIdentifier(pMessageTypeIdentifier);
+		IProtocol* pIProtocol = dynamic_cast<IProtocol*>(pIBaseClass);
+		if (!pIProtocol)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pExists = pIProtocol->HasMessageType(sMessageTypeIdentifier);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("Exists", *pExists);
 			pJournalEntry->writeSuccess();
 		}
 		return LIBGRPCWRAPPER_SUCCESS;
@@ -176,10 +775,34 @@ LibGRPCWrapperResult LibGRPCWrapper::Impl::LibGRPCWrapper_GetProcAddress (const 
 	*ppProcAddress = nullptr;
 	std::string sProcName (pProcName);
 	
-	if (sProcName == "libgrpcwrapper_connection_connect") 
-		*ppProcAddress = (void*) &libgrpcwrapper_connection_connect;
-	if (sProcName == "libgrpcwrapper_connection_sendtestmessage") 
-		*ppProcAddress = (void*) &libgrpcwrapper_connection_sendtestmessage;
+	if (sProcName == "libgrpcwrapper_message_hasfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_hasfield;
+	if (sProcName == "libgrpcwrapper_message_hasstringfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_hasstringfield;
+	if (sProcName == "libgrpcwrapper_message_setstringfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setstringfield;
+	if (sProcName == "libgrpcwrapper_message_getstringfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getstringfield;
+	if (sProcName == "libgrpcwrapper_response_getresponsetype") 
+		*ppProcAddress = (void*) &libgrpcwrapper_response_getresponsetype;
+	if (sProcName == "libgrpcwrapper_request_getrequesttype") 
+		*ppProcAddress = (void*) &libgrpcwrapper_request_getrequesttype;
+	if (sProcName == "libgrpcwrapper_request_getexpectedresponsetype") 
+		*ppProcAddress = (void*) &libgrpcwrapper_request_getexpectedresponsetype;
+	if (sProcName == "libgrpcwrapper_request_sendblocking") 
+		*ppProcAddress = (void*) &libgrpcwrapper_request_sendblocking;
+	if (sProcName == "libgrpcwrapper_connection_getendpoint") 
+		*ppProcAddress = (void*) &libgrpcwrapper_connection_getendpoint;
+	if (sProcName == "libgrpcwrapper_connection_close") 
+		*ppProcAddress = (void*) &libgrpcwrapper_connection_close;
+	if (sProcName == "libgrpcwrapper_connection_createstaticrequest") 
+		*ppProcAddress = (void*) &libgrpcwrapper_connection_createstaticrequest;
+	if (sProcName == "libgrpcwrapper_protocol_connectunsecure") 
+		*ppProcAddress = (void*) &libgrpcwrapper_protocol_connectunsecure;
+	if (sProcName == "libgrpcwrapper_protocol_getprotobufdefinition") 
+		*ppProcAddress = (void*) &libgrpcwrapper_protocol_getprotobufdefinition;
+	if (sProcName == "libgrpcwrapper_protocol_hasmessagetype") 
+		*ppProcAddress = (void*) &libgrpcwrapper_protocol_hasmessagetype;
 	if (sProcName == "libgrpcwrapper_getversion") 
 		*ppProcAddress = (void*) &libgrpcwrapper_getversion;
 	if (sProcName == "libgrpcwrapper_getlasterror") 
@@ -190,8 +813,8 @@ LibGRPCWrapperResult LibGRPCWrapper::Impl::LibGRPCWrapper_GetProcAddress (const 
 		*ppProcAddress = (void*) &libgrpcwrapper_releaseinstance;
 	if (sProcName == "libgrpcwrapper_getsymbollookupmethod") 
 		*ppProcAddress = (void*) &libgrpcwrapper_getsymbollookupmethod;
-	if (sProcName == "libgrpcwrapper_createconnection") 
-		*ppProcAddress = (void*) &libgrpcwrapper_createconnection;
+	if (sProcName == "libgrpcwrapper_createprotocol") 
+		*ppProcAddress = (void*) &libgrpcwrapper_createprotocol;
 	
 	if (*ppProcAddress == nullptr) 
 		return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -381,27 +1004,27 @@ LibGRPCWrapperResult libgrpcwrapper_getsymbollookupmethod(LibGRPCWrapper_pvoid *
 	}
 }
 
-LibGRPCWrapperResult libgrpcwrapper_createconnection(const char * pProtobufDefinition, LibGRPCWrapper_Connection * pConnectionInstance)
+LibGRPCWrapperResult libgrpcwrapper_createprotocol(const char * pProtoBufferDefinition, LibGRPCWrapper_Protocol * pProtocolInstance)
 {
 	IBase* pIBaseClass = nullptr;
 
 	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginStaticFunction("CreateConnection");
-			pJournalEntry->addStringParameter("ProtobufDefinition", pProtobufDefinition);
+			pJournalEntry = m_GlobalJournal->beginStaticFunction("CreateProtocol");
+			pJournalEntry->addStringParameter("ProtoBufferDefinition", pProtoBufferDefinition);
 		}
-		if (pProtobufDefinition == nullptr)
+		if (pProtoBufferDefinition == nullptr)
 			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
-		if (pConnectionInstance == nullptr)
+		if (pProtocolInstance == nullptr)
 			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
-		std::string sProtobufDefinition(pProtobufDefinition);
-		IBase* pBaseConnectionInstance(nullptr);
-		pBaseConnectionInstance = CWrapper::CreateConnection(sProtobufDefinition);
+		std::string sProtoBufferDefinition(pProtoBufferDefinition);
+		IBase* pBaseProtocolInstance(nullptr);
+		pBaseProtocolInstance = CWrapper::CreateProtocol(sProtoBufferDefinition);
 
-		*pConnectionInstance = (IBase*)(pBaseConnectionInstance);
+		*pProtocolInstance = (IBase*)(pBaseProtocolInstance);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ConnectionInstance", *pConnectionInstance);
+			pJournalEntry->addHandleResult("ProtocolInstance", *pProtocolInstance);
 			pJournalEntry->writeSuccess();
 		}
 		return LIBGRPCWRAPPER_SUCCESS;

@@ -29,15 +29,25 @@ int main()
         protoFileStream << "}" << std::endl;
 
         std::cout << "Creating connection\n";
-        auto pConnection = pWrapper->CreateConnection(protoFileStream.str());
+        auto pProtocol = pWrapper->CreateProtocol(protoFileStream.str());
 
         std::cout << "Connecting\n";
+        auto pConnection = pProtocol->ConnectUnsecure("localhost:50051");
 
-        //pConnection->Connect("localhost:50051");
+        std::cout << "Connection end point: " << pConnection->GetEndPoint() << std::endl;
+
+        std::cout << "Creating request "<< std::endl;
+        auto pRequest = pConnection->CreateStaticRequest("MachineRequest", "MachineResponse");
+
+        std::cout << "Setting fields" << std::endl;
+        pRequest->SetStringField("field_1", "test Field 1");
+        pRequest->SetStringField("field_2", "test Field 2");
 
         std::cout << "Sending Request\n";
+        auto pResponse = pRequest->SendBlocking("/machine.MachineService/SendTestMessage", 10000);
+        std::string sResponseField = pResponse->GetStringField("response_1");
 
-        pConnection->SendTestMessage();
+        std::cout << "Response field: " << sResponseField << std::endl;
 
         std::cout << "done\n";
     }

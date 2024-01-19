@@ -27,46 +27,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-Abstract: This is a stub class definition of CConnection
+Abstract: This is a stub class definition of CMessage
 
 */
 
-#include "libgrpcwrapper_connection.hpp"
+#include "libgrpcwrapper_message.hpp"
 #include "libgrpcwrapper_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "libgrpcwrapper_connectioninstance.hpp"
-#include "libgrpcwrapper_request.hpp"
+
 
 using namespace LibGRPCWrapper::Impl;
 
 /*************************************************************************************************************************
- Class definition of CConnection 
+ Class definition of CMessage 
 **************************************************************************************************************************/
 
-CConnection::CConnection(const std::string& sProtobufDefinition, const std::string sEndPoint)
-    : m_sProtobufDefinition (sProtobufDefinition), m_sEndPoint (sEndPoint)
-{
-    m_pConnectionInstance = std::make_shared<CConnectionInstance>(sProtobufDefinition, sEndPoint);
-}
-
-CConnection::~CConnection()
+CMessage::CMessage()
 {
 
 }
 
-std::string CConnection::GetEndPoint()
-{
-    return m_sEndPoint;
-}
-
-void CConnection::Close()
-{
-}
-
-IRequest * CConnection::CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier)
+CMessage::~CMessage()
 {
 
-    return new CRequest(m_pConnectionInstance, sRequestTypeIdentifier, sResponseTypeIdentifier);
 }
 

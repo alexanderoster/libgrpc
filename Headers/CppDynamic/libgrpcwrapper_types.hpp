@@ -104,7 +104,20 @@ typedef void * LibGRPCWrapper_pvoid;
 #define LIBGRPCWRAPPER_ERROR_COULDNOTLOADLIBRARY 1006 /** the library could not be loaded */
 #define LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT 1007 /** a required exported symbol could not be found in the library */
 #define LIBGRPCWRAPPER_ERROR_INCOMPATIBLEBINARYVERSION 1008 /** the version of the binary interface does not match the bindings interface */
-#define LIBGRPCWRAPPER_ERROR_NOTCONNECTED 1009 /** PLC is not connected */
+#define LIBGRPCWRAPPER_ERROR_COULDNOTCREATECHANNEL 1009 /** Could not create channel. */
+#define LIBGRPCWRAPPER_ERROR_FAILEDTOIMPORTPROTODEFINITION 1010 /** Failed to import proto definition. */
+#define LIBGRPCWRAPPER_ERROR_EMPTYREQUESTTYPEIDENTIFIER 1011 /** Empty request type identifier. */
+#define LIBGRPCWRAPPER_ERROR_INVALIDREQUESTTYPEIDENTIFIER 1012 /** Invalid request type identifier. */
+#define LIBGRPCWRAPPER_ERROR_EMPTYRESPONSETYPEIDENTIFIER 1013 /** Empty request type identifier. */
+#define LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER 1014 /** Invalid request type identifier. */
+#define LIBGRPCWRAPPER_ERROR_UNKNOWNMESSAGETYPENAME 1015 /** Unknown message type name. */
+#define LIBGRPCWRAPPER_ERROR_EMPTYMESSAGETYPENAME 1016 /** Empty messsage type name. */
+#define LIBGRPCWRAPPER_ERROR_COULDNOTGETMESSAGEPROTOTYPE 1017 /** Could not get message prototype. */
+#define LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND 1018 /** Request field not found. */
+#define LIBGRPCWRAPPER_ERROR_RESPONSEFIELDNOTFOUND 1019 /** Response field not found. */
+#define LIBGRPCWRAPPER_ERROR_EMPTYSERVICEMETHOD 1020 /** Empty service method. */
+#define LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE 1021 /** Empty request response. */
+#define LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE 1022 /** Failed to parse request response. */
 
 /*************************************************************************************************************************
  Error strings for LibGRPCWrapper
@@ -121,7 +134,20 @@ inline const char * LIBGRPCWRAPPER_GETERRORSTRING (LibGRPCWrapperResult nErrorCo
     case LIBGRPCWRAPPER_ERROR_COULDNOTLOADLIBRARY: return "the library could not be loaded";
     case LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT: return "a required exported symbol could not be found in the library";
     case LIBGRPCWRAPPER_ERROR_INCOMPATIBLEBINARYVERSION: return "the version of the binary interface does not match the bindings interface";
-    case LIBGRPCWRAPPER_ERROR_NOTCONNECTED: return "PLC is not connected";
+    case LIBGRPCWRAPPER_ERROR_COULDNOTCREATECHANNEL: return "Could not create channel.";
+    case LIBGRPCWRAPPER_ERROR_FAILEDTOIMPORTPROTODEFINITION: return "Failed to import proto definition.";
+    case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTTYPEIDENTIFIER: return "Empty request type identifier.";
+    case LIBGRPCWRAPPER_ERROR_INVALIDREQUESTTYPEIDENTIFIER: return "Invalid request type identifier.";
+    case LIBGRPCWRAPPER_ERROR_EMPTYRESPONSETYPEIDENTIFIER: return "Empty request type identifier.";
+    case LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER: return "Invalid request type identifier.";
+    case LIBGRPCWRAPPER_ERROR_UNKNOWNMESSAGETYPENAME: return "Unknown message type name.";
+    case LIBGRPCWRAPPER_ERROR_EMPTYMESSAGETYPENAME: return "Empty messsage type name.";
+    case LIBGRPCWRAPPER_ERROR_COULDNOTGETMESSAGEPROTOTYPE: return "Could not get message prototype.";
+    case LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND: return "Request field not found.";
+    case LIBGRPCWRAPPER_ERROR_RESPONSEFIELDNOTFOUND: return "Response field not found.";
+    case LIBGRPCWRAPPER_ERROR_EMPTYSERVICEMETHOD: return "Empty service method.";
+    case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE: return "Empty request response.";
+    case LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE: return "Failed to parse request response.";
     default: return "unknown error";
   }
 }
@@ -131,7 +157,11 @@ inline const char * LIBGRPCWRAPPER_GETERRORSTRING (LibGRPCWrapperResult nErrorCo
 **************************************************************************************************************************/
 
 typedef LibGRPCWrapperHandle LibGRPCWrapper_Base;
+typedef LibGRPCWrapperHandle LibGRPCWrapper_Message;
+typedef LibGRPCWrapperHandle LibGRPCWrapper_Response;
+typedef LibGRPCWrapperHandle LibGRPCWrapper_Request;
 typedef LibGRPCWrapperHandle LibGRPCWrapper_Connection;
+typedef LibGRPCWrapperHandle LibGRPCWrapper_Protocol;
 
 namespace LibGRPCWrapper {
 

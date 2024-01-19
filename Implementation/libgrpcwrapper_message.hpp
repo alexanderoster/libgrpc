@@ -27,46 +27,54 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-Abstract: This is a stub class definition of CConnection
+Abstract: This is the class declaration of CMessage
 
 */
 
-#include "libgrpcwrapper_connection.hpp"
-#include "libgrpcwrapper_interfaceexception.hpp"
+
+#ifndef __LIBGRPCWRAPPER_MESSAGE
+#define __LIBGRPCWRAPPER_MESSAGE
+
+#include "libgrpcwrapper_interfaces.hpp"
+
+// Parent classes
+#include "libgrpcwrapper_base.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
-#include "libgrpcwrapper_connectioninstance.hpp"
-#include "libgrpcwrapper_request.hpp"
 
-using namespace LibGRPCWrapper::Impl;
+
+namespace LibGRPCWrapper {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CConnection 
+ Class declaration of CMessage 
 **************************************************************************************************************************/
 
-CConnection::CConnection(const std::string& sProtobufDefinition, const std::string sEndPoint)
-    : m_sProtobufDefinition (sProtobufDefinition), m_sEndPoint (sEndPoint)
-{
-    m_pConnectionInstance = std::make_shared<CConnectionInstance>(sProtobufDefinition, sEndPoint);
-}
+class CMessage : public virtual IMessage, public virtual CBase {
+private:
 
-CConnection::~CConnection()
-{
 
-}
+protected:
 
-std::string CConnection::GetEndPoint()
-{
-    return m_sEndPoint;
-}
 
-void CConnection::Close()
-{
-}
 
-IRequest * CConnection::CreateStaticRequest(const std::string & sRequestTypeIdentifier, const std::string & sResponseTypeIdentifier)
-{
+public:
 
-    return new CRequest(m_pConnectionInstance, sRequestTypeIdentifier, sResponseTypeIdentifier);
-}
+    CMessage();
 
+    virtual ~CMessage();
+
+};
+
+} // namespace Impl
+} // namespace LibGRPCWrapper
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIBGRPCWRAPPER_MESSAGE

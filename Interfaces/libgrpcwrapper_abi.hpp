@@ -61,25 +61,171 @@ extern "C" {
 **************************************************************************************************************************/
 
 /*************************************************************************************************************************
+ Class definition for Message
+**************************************************************************************************************************/
+
+/**
+* Returns if the request has a field of a certain name.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pFieldeExists - True if field exists.
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_hasfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pFieldeExists);
+
+/**
+* Returns if the request has a field of a certain name and this field is a string field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pStringFieldExists - True if field exists and is of type string.
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_hasstringfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pStringFieldExists);
+
+/**
+* Sets a string field of the request. Fails if the field does not exist or is not a string field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] pValue - New value of the field.
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_setstringfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, const char * pValue);
+
+/**
+* Gets a string field of the request. Fails if the field does not exist or is not a string field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of New value of the field., may be NULL
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_getstringfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, const LibGRPCWrapper_uint32 nValueBufferSize, LibGRPCWrapper_uint32* pValueNeededChars, char * pValueBuffer);
+
+/*************************************************************************************************************************
+ Class definition for Response
+**************************************************************************************************************************/
+
+/**
+* Returns the response type of the connection.
+*
+* @param[in] pResponse - Response instance.
+* @param[in] nResponseTypeBufferSize - size of the buffer (including trailing 0)
+* @param[out] pResponseTypeNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pResponseTypeBuffer -  buffer of Message type identifier., may be NULL
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_response_getresponsetype(LibGRPCWrapper_Response pResponse, const LibGRPCWrapper_uint32 nResponseTypeBufferSize, LibGRPCWrapper_uint32* pResponseTypeNeededChars, char * pResponseTypeBuffer);
+
+/*************************************************************************************************************************
+ Class definition for Request
+**************************************************************************************************************************/
+
+/**
+* Returns the request type of the connection.
+*
+* @param[in] pRequest - Request instance.
+* @param[in] nRequestTypeBufferSize - size of the buffer (including trailing 0)
+* @param[out] pRequestTypeNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pRequestTypeBuffer -  buffer of Message type identifier., may be NULL
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_request_getrequesttype(LibGRPCWrapper_Request pRequest, const LibGRPCWrapper_uint32 nRequestTypeBufferSize, LibGRPCWrapper_uint32* pRequestTypeNeededChars, char * pRequestTypeBuffer);
+
+/**
+* Returns the expected response type of the connection.
+*
+* @param[in] pRequest - Request instance.
+* @param[in] nExpectedResponseTypeBufferSize - size of the buffer (including trailing 0)
+* @param[out] pExpectedResponseTypeNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pExpectedResponseTypeBuffer -  buffer of Message type identifier., may be NULL
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_request_getexpectedresponsetype(LibGRPCWrapper_Request pRequest, const LibGRPCWrapper_uint32 nExpectedResponseTypeBufferSize, LibGRPCWrapper_uint32* pExpectedResponseTypeNeededChars, char * pExpectedResponseTypeBuffer);
+
+/**
+* Sends the request to the end point and waits for a response.
+*
+* @param[in] pRequest - Request instance.
+* @param[in] pServiceMethod - Service method to call.
+* @param[in] nTimeOutInMS - Timeout for the response in MS.
+* @param[out] pResponseInstance - Response Instance
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_request_sendblocking(LibGRPCWrapper_Request pRequest, const char * pServiceMethod, LibGRPCWrapper_uint32 nTimeOutInMS, LibGRPCWrapper_Response * pResponseInstance);
+
+/*************************************************************************************************************************
  Class definition for Connection
+**************************************************************************************************************************/
+
+/**
+* Returns the end point of the connection.
+*
+* @param[in] pConnection - Connection instance.
+* @param[in] nEndPointBufferSize - size of the buffer (including trailing 0)
+* @param[out] pEndPointNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pEndPointBuffer -  buffer of End point of the connection., may be NULL
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_getendpoint(LibGRPCWrapper_Connection pConnection, const LibGRPCWrapper_uint32 nEndPointBufferSize, LibGRPCWrapper_uint32* pEndPointNeededChars, char * pEndPointBuffer);
+
+/**
+* Closes the connection. All subsequent calls to the connection will fail.
+*
+* @param[in] pConnection - Connection instance.
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_close(LibGRPCWrapper_Connection pConnection);
+
+/**
+* Creates a message request to the end point.
+*
+* @param[in] pConnection - Connection instance.
+* @param[in] pRequestTypeIdentifier - Message Type Identifier of the request.
+* @param[in] pResponseTypeIdentifier - Message Type Identifier of the expected response.
+* @param[out] pRequestInstance - Request Instance
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_createstaticrequest(LibGRPCWrapper_Connection pConnection, const char * pRequestTypeIdentifier, const char * pResponseTypeIdentifier, LibGRPCWrapper_Request * pRequestInstance);
+
+/*************************************************************************************************************************
+ Class definition for Protocol
 **************************************************************************************************************************/
 
 /**
 * Connects to an end point
 *
-* @param[in] pConnection - Connection instance.
+* @param[in] pProtocol - Protocol instance.
 * @param[in] pNetworkCredentials - Host to connect to
+* @param[out] pConnectionInstance - Connection Instance
 * @return error code or 0 (success)
 */
-LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_connect(LibGRPCWrapper_Connection pConnection, const char * pNetworkCredentials);
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_protocol_connectunsecure(LibGRPCWrapper_Protocol pProtocol, const char * pNetworkCredentials, LibGRPCWrapper_Connection * pConnectionInstance);
 
 /**
-* Send a test message
+* Returns protobuf definition as string.
 *
-* @param[in] pConnection - Connection instance.
+* @param[in] pProtocol - Protocol instance.
+* @param[in] nProtobufDefinitionBufferSize - size of the buffer (including trailing 0)
+* @param[out] pProtobufDefinitionNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pProtobufDefinitionBuffer -  buffer of Protobuf file as string., may be NULL
 * @return error code or 0 (success)
 */
-LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_connection_sendtestmessage(LibGRPCWrapper_Connection pConnection);
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_protocol_getprotobufdefinition(LibGRPCWrapper_Protocol pProtocol, const LibGRPCWrapper_uint32 nProtobufDefinitionBufferSize, LibGRPCWrapper_uint32* pProtobufDefinitionNeededChars, char * pProtobufDefinitionBuffer);
+
+/**
+* Returns if protocol buffer has a certain message type.
+*
+* @param[in] pProtocol - Protocol instance.
+* @param[in] pMessageTypeIdentifier - Message Type Identifier.
+* @param[out] pExists - Returns if message type exists.
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_protocol_hasmessagetype(LibGRPCWrapper_Protocol pProtocol, const char * pMessageTypeIdentifier, bool * pExists);
 
 /*************************************************************************************************************************
  Global functions
@@ -134,11 +280,11 @@ LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_getsymbollookupmetho
 /**
 * Returns a PLC instance
 *
-* @param[in] pProtobufDefinition - String containing the proto definition
-* @param[out] pConnectionInstance - Connection Instance
+* @param[in] pProtoBufferDefinition - Protobuf structure definition as string.
+* @param[out] pProtocolInstance - Protocol Instance
 * @return error code or 0 (success)
 */
-LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_createconnection(const char * pProtobufDefinition, LibGRPCWrapper_Connection * pConnectionInstance);
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_createprotocol(const char * pProtoBufferDefinition, LibGRPCWrapper_Protocol * pProtocolInstance);
 
 #ifdef __cplusplus
 }

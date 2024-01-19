@@ -39,7 +39,7 @@ Interface version: 1.2.0
 #include "libgrpcwrapper_abi.hpp"
 #include "libgrpcwrapper_interfaces.hpp"
 #include "libgrpcwrapper_interfaceexception.hpp"
-#include "libgrpcwrapper_connection.hpp"
+#include "libgrpcwrapper_protocol.hpp"
 
 using namespace LibGRPCWrapper;
 using namespace LibGRPCWrapper::Impl;
@@ -70,9 +70,9 @@ void CWrapper::ReleaseInstance(IBase* pInstance)
 	IBase::ReleaseBaseClassInterface(pInstance);
 }
 
-IConnection * CWrapper::CreateConnection(const std::string& sProtobufDefinition)
+IProtocol * CWrapper::CreateProtocol(const std::string& sProtobufDefinition)
 {
-	return new CConnection(sProtobufDefinition);
+	return new CProtocol(sProtobufDefinition);
 }
 
 
