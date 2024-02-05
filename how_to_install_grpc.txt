@@ -1,0 +1,18 @@
+On Windows:
+-----------
+
+git clone https://github.com/Microsoft/vcpkg.git
+
+GitHub - microsoft/vcpkg: C++ Library Manager for Windows, Linux, and MacOS
+C++ Library Manager for Windows, Linux, and MacOS. Contribute to microsoft/vcpkg development by creating an account on GitHub.
+
+./vcpkg install grpc --triplet x64-windows
+./vcpkg install protobuf --triplet x64-windows
+./vcpkg integrate install
+
+
+
+Python test Server:
+-------------------
+pip3 install protobuf
+pip3 install grpcio
