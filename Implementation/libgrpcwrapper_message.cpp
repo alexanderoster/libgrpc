@@ -44,12 +44,228 @@ using namespace LibGRPCWrapper::Impl;
 **************************************************************************************************************************/
 
 CMessage::CMessage()
+    : m_pMessageDescriptor (nullptr), m_pReflection (nullptr)
 {
 
 }
 
 CMessage::~CMessage()
 {
+
+}
+
+
+void CMessage::ensureObjects()
+{
+    if (m_pMessage == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_MESSAGISNULL);
+    if (m_pMessageDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_MESSAGEDESCRIPTORISNULL);
+    if (m_pReflection == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_MESSAGREFLECTIONISNULL);
+
+}
+
+
+bool CMessage::HasField(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    return (pFieldDescriptor != nullptr);
+}
+
+bool CMessage::HasStringField(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor != nullptr)
+        return (pFieldDescriptor->type() == google::protobuf::FieldDescriptor::Type::TYPE_STRING);
+
+    return false;
+}
+
+void CMessage::SetStringField(const std::string& sFieldName, const std::string& sValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetString(m_pMessage.get(), pFieldDescriptor, sValue);
+
+}
+
+std::string CMessage::GetStringField(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetString(*m_pMessage.get(), pFieldDescriptor);
+}
+
+
+void CMessage::SetInt32Field(const std::string& sFieldName, const LibGRPCWrapper_int32 nValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetInt32(m_pMessage.get(), pFieldDescriptor, nValue);
+}
+
+LibGRPCWrapper_int32 CMessage::GetInt32Field(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetInt32(*m_pMessage.get(), pFieldDescriptor);
+}
+
+void CMessage::SetUInt32Field(const std::string& sFieldName, const LibGRPCWrapper_uint32 nValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetUInt32(m_pMessage.get(), pFieldDescriptor, nValue);
+}
+
+LibGRPCWrapper_uint32 CMessage::GetUInt32Field(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetUInt32(*m_pMessage.get(), pFieldDescriptor);
+}
+
+void CMessage::SetInt64Field(const std::string& sFieldName, const LibGRPCWrapper_int64 nValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetInt64(m_pMessage.get(), pFieldDescriptor, nValue);
+}
+
+LibGRPCWrapper_int64 CMessage::GetInt64Field(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetInt64(*m_pMessage.get(), pFieldDescriptor);
+}
+
+void CMessage::SetUInt64Field(const std::string& sFieldName, const LibGRPCWrapper_uint64 nValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetUInt64(m_pMessage.get(), pFieldDescriptor, nValue);
+}
+
+LibGRPCWrapper_uint64 CMessage::GetUInt64Field(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetUInt64(*m_pMessage.get(), pFieldDescriptor);
+}
+
+void CMessage::SetBoolField(const std::string& sFieldName, const bool bValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetBool(m_pMessage.get(), pFieldDescriptor, bValue);
+
+}
+
+bool CMessage::GetBoolField(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetBool(*m_pMessage.get(), pFieldDescriptor);
+
+}
+
+void CMessage::SetFloatField(const std::string& sFieldName, const LibGRPCWrapper_single fValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetFloat(m_pMessage.get(), pFieldDescriptor, fValue);
+}
+
+LibGRPCWrapper_single CMessage::GetFloatField(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetFloat(*m_pMessage.get(), pFieldDescriptor);
+
+}
+
+void CMessage::SetDoubleField(const std::string& sFieldName, const LibGRPCWrapper_double dValue)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    m_pReflection->SetDouble(m_pMessage.get(), pFieldDescriptor, dValue);
+
+}
+
+LibGRPCWrapper_int32 CMessage::GetDoubleField(const std::string& sFieldName)
+{
+    ensureObjects();
+
+    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pMessageDescriptor->FindFieldByName(sFieldName);
+    if (pFieldDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
+
+    return m_pReflection->GetDouble(*m_pMessage.get(), pFieldDescriptor);
 
 }
 

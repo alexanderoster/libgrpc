@@ -199,6 +199,9 @@ public:
 			case LIBGRPCWRAPPER_ERROR_EMPTYSERVICEMETHOD: return "EMPTYSERVICEMETHOD";
 			case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE: return "EMPTYREQUESTRESPONSE";
 			case LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE: return "FAILEDTOPARSEREQUESTRESPONSE";
+			case LIBGRPCWRAPPER_ERROR_MESSAGEDESCRIPTORISNULL: return "MESSAGEDESCRIPTORISNULL";
+			case LIBGRPCWRAPPER_ERROR_MESSAGISNULL: return "MESSAGISNULL";
+			case LIBGRPCWRAPPER_ERROR_MESSAGREFLECTIONISNULL: return "MESSAGREFLECTIONISNULL";
 		}
 		return "UNKNOWN";
 	}
@@ -229,6 +232,9 @@ public:
 			case LIBGRPCWRAPPER_ERROR_EMPTYSERVICEMETHOD: return "Empty service method.";
 			case LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE: return "Empty request response.";
 			case LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE: return "Failed to parse request response.";
+			case LIBGRPCWRAPPER_ERROR_MESSAGEDESCRIPTORISNULL: return "Internal error: Message descriptor is null";
+			case LIBGRPCWRAPPER_ERROR_MESSAGISNULL: return "Internal error: Message is null";
+			case LIBGRPCWRAPPER_ERROR_MESSAGREFLECTIONISNULL: return "Internal error: Message reflection is null";
 		}
 		return "unknown error";
 	}
@@ -430,6 +436,20 @@ public:
 	inline bool HasStringField(const std::string & sFieldName);
 	inline void SetStringField(const std::string & sFieldName, const std::string & sValue);
 	inline std::string GetStringField(const std::string & sFieldName);
+	inline void SetInt32Field(const std::string & sFieldName, const LibGRPCWrapper_int32 nValue);
+	inline LibGRPCWrapper_int32 GetInt32Field(const std::string & sFieldName);
+	inline void SetUInt32Field(const std::string & sFieldName, const LibGRPCWrapper_uint32 nValue);
+	inline LibGRPCWrapper_uint32 GetUInt32Field(const std::string & sFieldName);
+	inline void SetInt64Field(const std::string & sFieldName, const LibGRPCWrapper_int64 nValue);
+	inline LibGRPCWrapper_int64 GetInt64Field(const std::string & sFieldName);
+	inline void SetUInt64Field(const std::string & sFieldName, const LibGRPCWrapper_uint64 nValue);
+	inline LibGRPCWrapper_uint64 GetUInt64Field(const std::string & sFieldName);
+	inline void SetBoolField(const std::string & sFieldName, const bool bValue);
+	inline bool GetBoolField(const std::string & sFieldName);
+	inline void SetFloatField(const std::string & sFieldName, const LibGRPCWrapper_single fValue);
+	inline LibGRPCWrapper_single GetFloatField(const std::string & sFieldName);
+	inline void SetDoubleField(const std::string & sFieldName, const LibGRPCWrapper_double dValue);
+	inline LibGRPCWrapper_int32 GetDoubleField(const std::string & sFieldName);
 };
 	
 /*************************************************************************************************************************
@@ -607,6 +627,20 @@ public:
 		pWrapperTable->m_Message_HasStringField = nullptr;
 		pWrapperTable->m_Message_SetStringField = nullptr;
 		pWrapperTable->m_Message_GetStringField = nullptr;
+		pWrapperTable->m_Message_SetInt32Field = nullptr;
+		pWrapperTable->m_Message_GetInt32Field = nullptr;
+		pWrapperTable->m_Message_SetUInt32Field = nullptr;
+		pWrapperTable->m_Message_GetUInt32Field = nullptr;
+		pWrapperTable->m_Message_SetInt64Field = nullptr;
+		pWrapperTable->m_Message_GetInt64Field = nullptr;
+		pWrapperTable->m_Message_SetUInt64Field = nullptr;
+		pWrapperTable->m_Message_GetUInt64Field = nullptr;
+		pWrapperTable->m_Message_SetBoolField = nullptr;
+		pWrapperTable->m_Message_GetBoolField = nullptr;
+		pWrapperTable->m_Message_SetFloatField = nullptr;
+		pWrapperTable->m_Message_GetFloatField = nullptr;
+		pWrapperTable->m_Message_SetDoubleField = nullptr;
+		pWrapperTable->m_Message_GetDoubleField = nullptr;
 		pWrapperTable->m_Response_GetResponseType = nullptr;
 		pWrapperTable->m_Request_GetRequestType = nullptr;
 		pWrapperTable->m_Request_GetExpectedResponseType = nullptr;
@@ -707,6 +741,132 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Message_GetStringField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetInt32Field = (PLibGRPCWrapperMessage_SetInt32FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setint32field");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetInt32Field = (PLibGRPCWrapperMessage_SetInt32FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setint32field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetInt32Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetInt32Field = (PLibGRPCWrapperMessage_GetInt32FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getint32field");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetInt32Field = (PLibGRPCWrapperMessage_GetInt32FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getint32field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetInt32Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetUInt32Field = (PLibGRPCWrapperMessage_SetUInt32FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setuint32field");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetUInt32Field = (PLibGRPCWrapperMessage_SetUInt32FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setuint32field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetUInt32Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetUInt32Field = (PLibGRPCWrapperMessage_GetUInt32FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getuint32field");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetUInt32Field = (PLibGRPCWrapperMessage_GetUInt32FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getuint32field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetUInt32Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetInt64Field = (PLibGRPCWrapperMessage_SetInt64FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setint64field");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetInt64Field = (PLibGRPCWrapperMessage_SetInt64FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setint64field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetInt64Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetInt64Field = (PLibGRPCWrapperMessage_GetInt64FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getint64field");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetInt64Field = (PLibGRPCWrapperMessage_GetInt64FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getint64field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetInt64Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetUInt64Field = (PLibGRPCWrapperMessage_SetUInt64FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setuint64field");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetUInt64Field = (PLibGRPCWrapperMessage_SetUInt64FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setuint64field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetUInt64Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetUInt64Field = (PLibGRPCWrapperMessage_GetUInt64FieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getuint64field");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetUInt64Field = (PLibGRPCWrapperMessage_GetUInt64FieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getuint64field");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetUInt64Field == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetBoolField = (PLibGRPCWrapperMessage_SetBoolFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setboolfield");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetBoolField = (PLibGRPCWrapperMessage_SetBoolFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setboolfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetBoolField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetBoolField = (PLibGRPCWrapperMessage_GetBoolFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getboolfield");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetBoolField = (PLibGRPCWrapperMessage_GetBoolFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getboolfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetBoolField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetFloatField = (PLibGRPCWrapperMessage_SetFloatFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setfloatfield");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetFloatField = (PLibGRPCWrapperMessage_SetFloatFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setfloatfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetFloatField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetFloatField = (PLibGRPCWrapperMessage_GetFloatFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getfloatfield");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetFloatField = (PLibGRPCWrapperMessage_GetFloatFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getfloatfield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetFloatField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_SetDoubleField = (PLibGRPCWrapperMessage_SetDoubleFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_setdoublefield");
+		#else // _WIN32
+		pWrapperTable->m_Message_SetDoubleField = (PLibGRPCWrapperMessage_SetDoubleFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_setdoublefield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_SetDoubleField == nullptr)
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Message_GetDoubleField = (PLibGRPCWrapperMessage_GetDoubleFieldPtr) GetProcAddress(hLibrary, "libgrpcwrapper_message_getdoublefield");
+		#else // _WIN32
+		pWrapperTable->m_Message_GetDoubleField = (PLibGRPCWrapperMessage_GetDoubleFieldPtr) dlsym(hLibrary, "libgrpcwrapper_message_getdoublefield");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Message_GetDoubleField == nullptr)
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -885,6 +1045,62 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetStringField == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setint32field", (void**)&(pWrapperTable->m_Message_SetInt32Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetInt32Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getint32field", (void**)&(pWrapperTable->m_Message_GetInt32Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetInt32Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setuint32field", (void**)&(pWrapperTable->m_Message_SetUInt32Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetUInt32Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getuint32field", (void**)&(pWrapperTable->m_Message_GetUInt32Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetUInt32Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setint64field", (void**)&(pWrapperTable->m_Message_SetInt64Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetInt64Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getint64field", (void**)&(pWrapperTable->m_Message_GetInt64Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetInt64Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setuint64field", (void**)&(pWrapperTable->m_Message_SetUInt64Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetUInt64Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getuint64field", (void**)&(pWrapperTable->m_Message_GetUInt64Field));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetUInt64Field == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setboolfield", (void**)&(pWrapperTable->m_Message_SetBoolField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetBoolField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getboolfield", (void**)&(pWrapperTable->m_Message_GetBoolField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetBoolField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setfloatfield", (void**)&(pWrapperTable->m_Message_SetFloatField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetFloatField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getfloatfield", (void**)&(pWrapperTable->m_Message_GetFloatField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetFloatField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_setdoublefield", (void**)&(pWrapperTable->m_Message_SetDoubleField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_SetDoubleField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("libgrpcwrapper_message_getdoublefield", (void**)&(pWrapperTable->m_Message_GetDoubleField));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Message_GetDoubleField == nullptr) )
+			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("libgrpcwrapper_response_getresponsetype", (void**)&(pWrapperTable->m_Response_GetResponseType));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Response_GetResponseType == nullptr) )
 			return LIBGRPCWRAPPER_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -963,20 +1179,20 @@ public:
 	 */
 	
 	/**
-	* CMessage::HasField - Returns if the request has a field of a certain name.
+	* CMessage::HasField - Returns if the message has a field of a certain name.
 	* @param[in] sFieldName - Name of the field.
 	* @return True if field exists.
 	*/
 	bool CMessage::HasField(const std::string & sFieldName)
 	{
-		bool resultFieldeExists = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_Message_HasField(m_pHandle, sFieldName.c_str(), &resultFieldeExists));
+		bool resultFieldExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_HasField(m_pHandle, sFieldName.c_str(), &resultFieldExists));
 		
-		return resultFieldeExists;
+		return resultFieldExists;
 	}
 	
 	/**
-	* CMessage::HasStringField - Returns if the request has a field of a certain name and this field is a string field.
+	* CMessage::HasStringField - Returns if the message has a field of a certain name and this field is a string field.
 	* @param[in] sFieldName - Name of the field.
 	* @return True if field exists and is of type string.
 	*/
@@ -989,7 +1205,7 @@ public:
 	}
 	
 	/**
-	* CMessage::SetStringField - Sets a string field of the request. Fails if the field does not exist or is not a string field.
+	* CMessage::SetStringField - Sets a string field of the message. Fails if the field does not exist or is not a string field.
 	* @param[in] sFieldName - Name of the field.
 	* @param[in] sValue - New value of the field.
 	*/
@@ -999,9 +1215,9 @@ public:
 	}
 	
 	/**
-	* CMessage::GetStringField - Gets a string field of the request. Fails if the field does not exist or is not a string field.
+	* CMessage::GetStringField - Gets a string field of the message. Fails if the field does not exist or is not a string field.
 	* @param[in] sFieldName - Name of the field.
-	* @return New value of the field.
+	* @return Current value of the field.
 	*/
 	std::string CMessage::GetStringField(const std::string & sFieldName)
 	{
@@ -1012,6 +1228,167 @@ public:
 		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetStringField(m_pHandle, sFieldName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
 		
 		return std::string(&bufferValue[0]);
+	}
+	
+	/**
+	* CMessage::SetInt32Field - Sets a int32 field of the message. Fails if the field does not exist or is not a int32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	void CMessage::SetInt32Field(const std::string & sFieldName, const LibGRPCWrapper_int32 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetInt32Field(m_pHandle, sFieldName.c_str(), nValue));
+	}
+	
+	/**
+	* CMessage::GetInt32Field - Gets a int32 field of the message. Fails if the field does not exist or is not a int32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	LibGRPCWrapper_int32 CMessage::GetInt32Field(const std::string & sFieldName)
+	{
+		LibGRPCWrapper_int32 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetInt32Field(m_pHandle, sFieldName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CMessage::SetUInt32Field - Sets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	void CMessage::SetUInt32Field(const std::string & sFieldName, const LibGRPCWrapper_uint32 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetUInt32Field(m_pHandle, sFieldName.c_str(), nValue));
+	}
+	
+	/**
+	* CMessage::GetUInt32Field - Gets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	LibGRPCWrapper_uint32 CMessage::GetUInt32Field(const std::string & sFieldName)
+	{
+		LibGRPCWrapper_uint32 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetUInt32Field(m_pHandle, sFieldName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CMessage::SetInt64Field - Sets a int64 field of the message. Fails if the field does not exist or is not a int64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	void CMessage::SetInt64Field(const std::string & sFieldName, const LibGRPCWrapper_int64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetInt64Field(m_pHandle, sFieldName.c_str(), nValue));
+	}
+	
+	/**
+	* CMessage::GetInt64Field - Gets a int64 field of the message. Fails if the field does not exist or is not a int64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	LibGRPCWrapper_int64 CMessage::GetInt64Field(const std::string & sFieldName)
+	{
+		LibGRPCWrapper_int64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetInt64Field(m_pHandle, sFieldName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CMessage::SetUInt64Field - Sets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	void CMessage::SetUInt64Field(const std::string & sFieldName, const LibGRPCWrapper_uint64 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetUInt64Field(m_pHandle, sFieldName.c_str(), nValue));
+	}
+	
+	/**
+	* CMessage::GetUInt64Field - Gets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	LibGRPCWrapper_uint64 CMessage::GetUInt64Field(const std::string & sFieldName)
+	{
+		LibGRPCWrapper_uint64 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetUInt64Field(m_pHandle, sFieldName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CMessage::SetBoolField - Sets a bool field of the message. Fails if the field does not exist or is not a bool field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] bValue - New value of the field.
+	*/
+	void CMessage::SetBoolField(const std::string & sFieldName, const bool bValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetBoolField(m_pHandle, sFieldName.c_str(), bValue));
+	}
+	
+	/**
+	* CMessage::GetBoolField - Gets a bool field of the message. Fails if the field does not exist or is not a bool field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	bool CMessage::GetBoolField(const std::string & sFieldName)
+	{
+		bool resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetBoolField(m_pHandle, sFieldName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CMessage::SetFloatField - Sets a float field of the message. Fails if the field does not exist or is not a float field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] fValue - New value of the field.
+	*/
+	void CMessage::SetFloatField(const std::string & sFieldName, const LibGRPCWrapper_single fValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetFloatField(m_pHandle, sFieldName.c_str(), fValue));
+	}
+	
+	/**
+	* CMessage::GetFloatField - Gets a float field of the message. Fails if the field does not exist or is not a float field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	LibGRPCWrapper_single CMessage::GetFloatField(const std::string & sFieldName)
+	{
+		LibGRPCWrapper_single resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetFloatField(m_pHandle, sFieldName.c_str(), &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CMessage::SetDoubleField - Sets a double field of the message. Fails if the field does not exist or is not a double field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] dValue - New value of the field.
+	*/
+	void CMessage::SetDoubleField(const std::string & sFieldName, const LibGRPCWrapper_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_SetDoubleField(m_pHandle, sFieldName.c_str(), dValue));
+	}
+	
+	/**
+	* CMessage::GetDoubleField - Gets a double field of the message. Fails if the field does not exist or is not a double field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	LibGRPCWrapper_int32 CMessage::GetDoubleField(const std::string & sFieldName)
+	{
+		LibGRPCWrapper_int32 resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Message_GetDoubleField(m_pHandle, sFieldName.c_str(), &resultValue));
+		
+		return resultValue;
 	}
 	
 	/**

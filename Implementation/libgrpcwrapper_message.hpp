@@ -45,7 +45,7 @@ Abstract: This is the class declaration of CMessage
 #endif
 
 // Include custom headers here.
-
+#include "libgrpcwrapper_connectioninstance.hpp"
 
 namespace LibGRPCWrapper {
 namespace Impl {
@@ -61,13 +61,54 @@ private:
 
 protected:
 
+    const google::protobuf::Descriptor* m_pMessageDescriptor;
+    std::shared_ptr<google::protobuf::Message> m_pMessage;
+    const google::protobuf::Reflection* m_pReflection;
 
+    void ensureObjects();
 
 public:
 
     CMessage();
 
     virtual ~CMessage();
+
+    bool HasField(const std::string& sFieldName) override;
+
+    bool HasStringField(const std::string& sFieldName) override;
+
+    void SetStringField(const std::string& sFieldName, const std::string& sValue) override;
+
+    std::string GetStringField(const std::string& sFieldName) override;
+
+	void SetInt32Field(const std::string& sFieldName, const LibGRPCWrapper_int32 nValue) override;
+
+	LibGRPCWrapper_int32 GetInt32Field(const std::string& sFieldName) override;
+
+	void SetUInt32Field(const std::string& sFieldName, const LibGRPCWrapper_uint32 nValue) override;
+
+	LibGRPCWrapper_uint32 GetUInt32Field(const std::string& sFieldName) override;
+
+	void SetInt64Field(const std::string& sFieldName, const LibGRPCWrapper_int64 nValue) override;
+
+	LibGRPCWrapper_int64 GetInt64Field(const std::string& sFieldName) override;
+
+	void SetUInt64Field(const std::string& sFieldName, const LibGRPCWrapper_uint64 nValue) override;
+
+	LibGRPCWrapper_uint64 GetUInt64Field(const std::string& sFieldName) override;
+
+	void SetBoolField(const std::string& sFieldName, const bool bValue) override;
+
+	bool GetBoolField(const std::string& sFieldName) override;
+
+	void SetFloatField(const std::string& sFieldName, const LibGRPCWrapper_single fValue) override;
+
+	LibGRPCWrapper_single GetFloatField(const std::string& sFieldName) override;
+
+	void SetDoubleField(const std::string& sFieldName, const LibGRPCWrapper_double dValue) override;
+
+	LibGRPCWrapper_int32 GetDoubleField(const std::string& sFieldName) override;
+
 
 };
 

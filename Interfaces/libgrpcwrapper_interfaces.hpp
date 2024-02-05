@@ -247,32 +247,130 @@ typedef IBaseSharedPtr<IBase> PIBase;
 class IMessage : public virtual IBase {
 public:
 	/**
-	* IMessage::HasField - Returns if the request has a field of a certain name.
+	* IMessage::HasField - Returns if the message has a field of a certain name.
 	* @param[in] sFieldName - Name of the field.
 	* @return True if field exists.
 	*/
 	virtual bool HasField(const std::string & sFieldName) = 0;
 
 	/**
-	* IMessage::HasStringField - Returns if the request has a field of a certain name and this field is a string field.
+	* IMessage::HasStringField - Returns if the message has a field of a certain name and this field is a string field.
 	* @param[in] sFieldName - Name of the field.
 	* @return True if field exists and is of type string.
 	*/
 	virtual bool HasStringField(const std::string & sFieldName) = 0;
 
 	/**
-	* IMessage::SetStringField - Sets a string field of the request. Fails if the field does not exist or is not a string field.
+	* IMessage::SetStringField - Sets a string field of the message. Fails if the field does not exist or is not a string field.
 	* @param[in] sFieldName - Name of the field.
 	* @param[in] sValue - New value of the field.
 	*/
 	virtual void SetStringField(const std::string & sFieldName, const std::string & sValue) = 0;
 
 	/**
-	* IMessage::GetStringField - Gets a string field of the request. Fails if the field does not exist or is not a string field.
+	* IMessage::GetStringField - Gets a string field of the message. Fails if the field does not exist or is not a string field.
 	* @param[in] sFieldName - Name of the field.
-	* @return New value of the field.
+	* @return Current value of the field.
 	*/
 	virtual std::string GetStringField(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetInt32Field - Sets a int32 field of the message. Fails if the field does not exist or is not a int32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	virtual void SetInt32Field(const std::string & sFieldName, const LibGRPCWrapper_int32 nValue) = 0;
+
+	/**
+	* IMessage::GetInt32Field - Gets a int32 field of the message. Fails if the field does not exist or is not a int32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	virtual LibGRPCWrapper_int32 GetInt32Field(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetUInt32Field - Sets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	virtual void SetUInt32Field(const std::string & sFieldName, const LibGRPCWrapper_uint32 nValue) = 0;
+
+	/**
+	* IMessage::GetUInt32Field - Gets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	virtual LibGRPCWrapper_uint32 GetUInt32Field(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetInt64Field - Sets a int64 field of the message. Fails if the field does not exist or is not a int64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	virtual void SetInt64Field(const std::string & sFieldName, const LibGRPCWrapper_int64 nValue) = 0;
+
+	/**
+	* IMessage::GetInt64Field - Gets a int64 field of the message. Fails if the field does not exist or is not a int64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	virtual LibGRPCWrapper_int64 GetInt64Field(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetUInt64Field - Sets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] nValue - New value of the field.
+	*/
+	virtual void SetUInt64Field(const std::string & sFieldName, const LibGRPCWrapper_uint64 nValue) = 0;
+
+	/**
+	* IMessage::GetUInt64Field - Gets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	virtual LibGRPCWrapper_uint64 GetUInt64Field(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetBoolField - Sets a bool field of the message. Fails if the field does not exist or is not a bool field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] bValue - New value of the field.
+	*/
+	virtual void SetBoolField(const std::string & sFieldName, const bool bValue) = 0;
+
+	/**
+	* IMessage::GetBoolField - Gets a bool field of the message. Fails if the field does not exist or is not a bool field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	virtual bool GetBoolField(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetFloatField - Sets a float field of the message. Fails if the field does not exist or is not a float field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] fValue - New value of the field.
+	*/
+	virtual void SetFloatField(const std::string & sFieldName, const LibGRPCWrapper_single fValue) = 0;
+
+	/**
+	* IMessage::GetFloatField - Gets a float field of the message. Fails if the field does not exist or is not a float field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	virtual LibGRPCWrapper_single GetFloatField(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::SetDoubleField - Sets a double field of the message. Fails if the field does not exist or is not a double field.
+	* @param[in] sFieldName - Name of the field.
+	* @param[in] dValue - New value of the field.
+	*/
+	virtual void SetDoubleField(const std::string & sFieldName, const LibGRPCWrapper_double dValue) = 0;
+
+	/**
+	* IMessage::GetDoubleField - Gets a double field of the message. Fails if the field does not exist or is not a double field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Current value of the field.
+	*/
+	virtual LibGRPCWrapper_int32 GetDoubleField(const std::string & sFieldName) = 0;
 
 };
 

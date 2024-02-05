@@ -62,9 +62,6 @@ private:
 
     std::string m_sResponseTypeIdentifier;
 
-    const google::protobuf::Descriptor* m_pResponseMessageDescriptor;
-    std::shared_ptr<google::protobuf::Message> m_pResponseMessage;
-    const google::protobuf::Reflection* m_pResponseReflection;
 
 public:
 
@@ -73,14 +70,6 @@ public:
     virtual ~CResponse();
 
 	std::string GetResponseType() override;
-
-	bool HasField(const std::string& sFieldName) override;
-
-	bool HasStringField(const std::string& sFieldName) override;
-
-	void SetStringField(const std::string& sFieldName, const std::string& sValue) override;
-
-	std::string GetStringField(const std::string& sFieldName) override;
 
 };
 

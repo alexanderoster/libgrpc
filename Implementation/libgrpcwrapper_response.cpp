@@ -55,9 +55,9 @@ CResponse::CResponse(std::shared_ptr<CConnectionInstance> pConnectionInstance, c
     if (!m_pConnectionInstance->hasMessageType(sResponseTypeIdentifier))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER, "invalid response type identifier: " + sResponseTypeIdentifier);
 
-    m_pResponseMessageDescriptor = m_pConnectionInstance->getMessageDescriptor(sResponseTypeIdentifier);
-    m_pResponseMessage = m_pConnectionInstance->createMessage(sResponseTypeIdentifier);
-    m_pResponseReflection = m_pResponseMessage->GetReflection();
+    m_pMessageDescriptor = m_pConnectionInstance->getMessageDescriptor(sResponseTypeIdentifier);
+    m_pMessage = m_pConnectionInstance->createMessage(sResponseTypeIdentifier);
+    m_pReflection = m_pMessage->GetReflection();
 
     // Deserialize response
     std::vector<grpc::Slice> responseSlices;
@@ -67,7 +67,7 @@ CResponse::CResponse(std::shared_ptr<CConnectionInstance> pConnectionInstance, c
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE, "empty request response: " + m_sResponseTypeIdentifier);
     std::string serializedResponse = std::string((const char*)responseSlices[0].begin(), responseSlices[0].size());
 
-    if (!m_pResponseMessage->ParseFromString(serializedResponse))
+    if (!m_pMessage->ParseFromString(serializedResponse))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE, "empty request response: " + m_sResponseTypeIdentifier);
 
 }
@@ -83,36 +83,3 @@ std::string CResponse::GetResponseType()
     return m_sResponseTypeIdentifier;
 }
 
-bool CResponse::HasField(const std::string& sFieldName)
-{
-    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pResponseMessageDescriptor->FindFieldByName(sFieldName);
-    return (pFieldDescriptor != nullptr);
-}
-
-bool CResponse::HasStringField(const std::string& sFieldName)
-{
-    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pResponseMessageDescriptor->FindFieldByName(sFieldName);
-    if (pFieldDescriptor != nullptr)
-        return (pFieldDescriptor->type() == google::protobuf::FieldDescriptor::Type::TYPE_STRING);
-
-    return false;
-}
-
-void CResponse::SetStringField(const std::string& sFieldName, const std::string& sValue)
-{
-    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pResponseMessageDescriptor->FindFieldByName(sFieldName);
-    if (pFieldDescriptor == nullptr)
-        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_RESPONSEFIELDNOTFOUND, "response field not found: " + sFieldName);
-
-    m_pResponseReflection->SetString(m_pResponseMessage.get(), pFieldDescriptor, sValue);
-
-}
-
-std::string CResponse::GetStringField(const std::string& sFieldName)
-{
-    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pResponseMessageDescriptor->FindFieldByName(sFieldName);
-    if (pFieldDescriptor == nullptr)
-        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_RESPONSEFIELDNOTFOUND, "response field not found: " + sFieldName);
-
-    return m_pResponseReflection->GetString(*m_pResponseMessage.get(), pFieldDescriptor);
-}

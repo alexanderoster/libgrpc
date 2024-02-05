@@ -62,9 +62,7 @@ private:
     std::string m_sRequestTypeIdentifier;
     std::string m_sResponseTypeIdentifier;
 
-    const google::protobuf::Descriptor* m_pRequestMessageDescriptor;
-    std::shared_ptr<google::protobuf::Message> m_pRequestMessage;
-    const google::protobuf::Reflection* m_pRequestReflection;
+
 
 public:
 
@@ -78,13 +76,7 @@ public:
 
 	IResponse * SendBlocking(const std::string & sServiceMethod, const LibGRPCWrapper_uint32 nTimeOutInMS) override;
 
-    bool HasField(const std::string& sFieldName) override;
 
-    bool HasStringField(const std::string& sFieldName) override;
-
-    void SetStringField(const std::string& sFieldName, const std::string& sValue) override;
-
-    std::string GetStringField(const std::string& sFieldName) override;
 
 };
 

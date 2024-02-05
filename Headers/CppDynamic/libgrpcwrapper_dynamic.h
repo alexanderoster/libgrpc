@@ -52,17 +52,17 @@ Interface version: 1.2.0
 **************************************************************************************************************************/
 
 /**
-* Returns if the request has a field of a certain name.
+* Returns if the message has a field of a certain name.
 *
 * @param[in] pMessage - Message instance.
 * @param[in] pFieldName - Name of the field.
-* @param[out] pFieldeExists - True if field exists.
+* @param[out] pFieldExists - True if field exists.
 * @return error code or 0 (success)
 */
-typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_HasFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pFieldeExists);
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_HasFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pFieldExists);
 
 /**
-* Returns if the request has a field of a certain name and this field is a string field.
+* Returns if the message has a field of a certain name and this field is a string field.
 *
 * @param[in] pMessage - Message instance.
 * @param[in] pFieldName - Name of the field.
@@ -72,7 +72,7 @@ typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_HasFieldPtr) (LibGRPCWrapp
 typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_HasStringFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pStringFieldExists);
 
 /**
-* Sets a string field of the request. Fails if the field does not exist or is not a string field.
+* Sets a string field of the message. Fails if the field does not exist or is not a string field.
 *
 * @param[in] pMessage - Message instance.
 * @param[in] pFieldName - Name of the field.
@@ -82,16 +82,156 @@ typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_HasStringFieldPtr) (LibGRP
 typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetStringFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, const char * pValue);
 
 /**
-* Gets a string field of the request. Fails if the field does not exist or is not a string field.
+* Gets a string field of the message. Fails if the field does not exist or is not a string field.
 *
 * @param[in] pMessage - Message instance.
 * @param[in] pFieldName - Name of the field.
 * @param[in] nValueBufferSize - size of the buffer (including trailing 0)
 * @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pValueBuffer -  buffer of New value of the field., may be NULL
+* @param[out] pValueBuffer -  buffer of Current value of the field., may be NULL
 * @return error code or 0 (success)
 */
 typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetStringFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, const LibGRPCWrapper_uint32 nValueBufferSize, LibGRPCWrapper_uint32* pValueNeededChars, char * pValueBuffer);
+
+/**
+* Sets a int32 field of the message. Fails if the field does not exist or is not a int32 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] nValue - New value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetInt32FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int32 nValue);
+
+/**
+* Gets a int32 field of the message. Fails if the field does not exist or is not a int32 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pValue - Current value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetInt32FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int32 * pValue);
+
+/**
+* Sets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] nValue - New value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetUInt32FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint32 nValue);
+
+/**
+* Gets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pValue - Current value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetUInt32FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint32 * pValue);
+
+/**
+* Sets a int64 field of the message. Fails if the field does not exist or is not a int64 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] nValue - New value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetInt64FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int64 nValue);
+
+/**
+* Gets a int64 field of the message. Fails if the field does not exist or is not a int64 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pValue - Current value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetInt64FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int64 * pValue);
+
+/**
+* Sets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] nValue - New value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetUInt64FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint64 nValue);
+
+/**
+* Gets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pValue - Current value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetUInt64FieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint64 * pValue);
+
+/**
+* Sets a bool field of the message. Fails if the field does not exist or is not a bool field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] bValue - New value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetBoolFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, bool bValue);
+
+/**
+* Gets a bool field of the message. Fails if the field does not exist or is not a bool field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pValue - Current value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetBoolFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pValue);
+
+/**
+* Sets a float field of the message. Fails if the field does not exist or is not a float field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] fValue - New value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetFloatFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_single fValue);
+
+/**
+* Gets a float field of the message. Fails if the field does not exist or is not a float field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pValue - Current value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetFloatFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_single * pValue);
+
+/**
+* Sets a double field of the message. Fails if the field does not exist or is not a double field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[in] dValue - New value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_SetDoubleFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_double dValue);
+
+/**
+* Gets a double field of the message. Fails if the field does not exist or is not a double field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pValue - Current value of the field.
+* @return error code or 0 (success)
+*/
+typedef LibGRPCWrapperResult (*PLibGRPCWrapperMessage_GetDoubleFieldPtr) (LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int32 * pValue);
 
 /*************************************************************************************************************************
  Class definition for Response
@@ -283,6 +423,20 @@ typedef struct {
 	PLibGRPCWrapperMessage_HasStringFieldPtr m_Message_HasStringField;
 	PLibGRPCWrapperMessage_SetStringFieldPtr m_Message_SetStringField;
 	PLibGRPCWrapperMessage_GetStringFieldPtr m_Message_GetStringField;
+	PLibGRPCWrapperMessage_SetInt32FieldPtr m_Message_SetInt32Field;
+	PLibGRPCWrapperMessage_GetInt32FieldPtr m_Message_GetInt32Field;
+	PLibGRPCWrapperMessage_SetUInt32FieldPtr m_Message_SetUInt32Field;
+	PLibGRPCWrapperMessage_GetUInt32FieldPtr m_Message_GetUInt32Field;
+	PLibGRPCWrapperMessage_SetInt64FieldPtr m_Message_SetInt64Field;
+	PLibGRPCWrapperMessage_GetInt64FieldPtr m_Message_GetInt64Field;
+	PLibGRPCWrapperMessage_SetUInt64FieldPtr m_Message_SetUInt64Field;
+	PLibGRPCWrapperMessage_GetUInt64FieldPtr m_Message_GetUInt64Field;
+	PLibGRPCWrapperMessage_SetBoolFieldPtr m_Message_SetBoolField;
+	PLibGRPCWrapperMessage_GetBoolFieldPtr m_Message_GetBoolField;
+	PLibGRPCWrapperMessage_SetFloatFieldPtr m_Message_SetFloatField;
+	PLibGRPCWrapperMessage_GetFloatFieldPtr m_Message_GetFloatField;
+	PLibGRPCWrapperMessage_SetDoubleFieldPtr m_Message_SetDoubleField;
+	PLibGRPCWrapperMessage_GetDoubleFieldPtr m_Message_GetDoubleField;
 	PLibGRPCWrapperResponse_GetResponseTypePtr m_Response_GetResponseType;
 	PLibGRPCWrapperRequest_GetRequestTypePtr m_Request_GetRequestType;
 	PLibGRPCWrapperRequest_GetExpectedResponseTypePtr m_Request_GetExpectedResponseType;

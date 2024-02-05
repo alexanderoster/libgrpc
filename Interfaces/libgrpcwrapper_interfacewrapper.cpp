@@ -95,7 +95,7 @@ LibGRPCWrapperResult handleUnhandledException(IBase * pIBaseClass, CLibGRPCWrapp
 /*************************************************************************************************************************
  Class implementation for Message
 **************************************************************************************************************************/
-LibGRPCWrapperResult libgrpcwrapper_message_hasfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pFieldeExists)
+LibGRPCWrapperResult libgrpcwrapper_message_hasfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pFieldExists)
 {
 	IBase* pIBaseClass = (IBase *)pMessage;
 
@@ -107,17 +107,17 @@ LibGRPCWrapperResult libgrpcwrapper_message_hasfield(LibGRPCWrapper_Message pMes
 		}
 		if (pFieldName == nullptr)
 			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
-		if (pFieldeExists == nullptr)
+		if (pFieldExists == nullptr)
 			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
 		std::string sFieldName(pFieldName);
 		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
 		if (!pIMessage)
 			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
 		
-		*pFieldeExists = pIMessage->HasField(sFieldName);
+		*pFieldExists = pIMessage->HasField(sFieldName);
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addBooleanResult("FieldeExists", *pFieldeExists);
+			pJournalEntry->addBooleanResult("FieldExists", *pFieldExists);
 			pJournalEntry->writeSuccess();
 		}
 		return LIBGRPCWRAPPER_SUCCESS;
@@ -255,6 +255,524 @@ LibGRPCWrapperResult libgrpcwrapper_message_getstringfield(LibGRPCWrapper_Messag
 		}
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addStringResult("Value", sValue.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setint32field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int32 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetInt32Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addInt32Parameter("Value", nValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetInt32Field(sFieldName, nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_getint32field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int32 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetInt32Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pValue = pIMessage->GetInt32Field(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt32Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setuint32field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint32 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetUInt32Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addUInt32Parameter("Value", nValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetUInt32Field(sFieldName, nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_getuint32field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint32 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetUInt32Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pValue = pIMessage->GetUInt32Field(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setint64field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int64 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetInt64Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addInt64Parameter("Value", nValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetInt64Field(sFieldName, nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_getint64field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int64 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetInt64Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pValue = pIMessage->GetInt64Field(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt64Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setuint64field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint64 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetUInt64Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addUInt64Parameter("Value", nValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetUInt64Field(sFieldName, nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_getuint64field(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_uint64 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetUInt64Field");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pValue = pIMessage->GetUInt64Field(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt64Result("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setboolfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool bValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetBoolField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addBooleanParameter("Value", bValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetBoolField(sFieldName, bValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_getboolfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetBoolField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pValue = pIMessage->GetBoolField(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setfloatfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_single fValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetFloatField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addSingleParameter("Value", fValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetFloatField(sFieldName, fValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_getfloatfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_single * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetFloatField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pValue = pIMessage->GetFloatField(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addSingleResult("Value", *pValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_setdoublefield(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_double dValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "SetDoubleField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+			pJournalEntry->addDoubleParameter("Value", dValue);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		pIMessage->SetDoubleField(sFieldName, dValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIBGRPCWRAPPER_SUCCESS;
+	}
+	catch (ELibGRPCWrapperInterfaceException & Exception) {
+		return handleLibGRPCWrapperException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+LibGRPCWrapperResult libgrpcwrapper_message_getdoublefield(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int32 * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pMessage;
+
+	PLibGRPCWrapperInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMessage, "Message", "GetDoubleField");
+			pJournalEntry->addStringParameter("FieldName", pFieldName);
+		}
+		if (pFieldName == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELibGRPCWrapperInterfaceException (LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+		std::string sFieldName(pFieldName);
+		IMessage* pIMessage = dynamic_cast<IMessage*>(pIBaseClass);
+		if (!pIMessage)
+			throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDCAST);
+		
+		*pValue = pIMessage->GetDoubleField(sFieldName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt32Result("Value", *pValue);
 			pJournalEntry->writeSuccess();
 		}
 		return LIBGRPCWRAPPER_SUCCESS;
@@ -783,6 +1301,34 @@ LibGRPCWrapperResult LibGRPCWrapper::Impl::LibGRPCWrapper_GetProcAddress (const 
 		*ppProcAddress = (void*) &libgrpcwrapper_message_setstringfield;
 	if (sProcName == "libgrpcwrapper_message_getstringfield") 
 		*ppProcAddress = (void*) &libgrpcwrapper_message_getstringfield;
+	if (sProcName == "libgrpcwrapper_message_setint32field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setint32field;
+	if (sProcName == "libgrpcwrapper_message_getint32field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getint32field;
+	if (sProcName == "libgrpcwrapper_message_setuint32field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setuint32field;
+	if (sProcName == "libgrpcwrapper_message_getuint32field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getuint32field;
+	if (sProcName == "libgrpcwrapper_message_setint64field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setint64field;
+	if (sProcName == "libgrpcwrapper_message_getint64field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getint64field;
+	if (sProcName == "libgrpcwrapper_message_setuint64field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setuint64field;
+	if (sProcName == "libgrpcwrapper_message_getuint64field") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getuint64field;
+	if (sProcName == "libgrpcwrapper_message_setboolfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setboolfield;
+	if (sProcName == "libgrpcwrapper_message_getboolfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getboolfield;
+	if (sProcName == "libgrpcwrapper_message_setfloatfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setfloatfield;
+	if (sProcName == "libgrpcwrapper_message_getfloatfield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getfloatfield;
+	if (sProcName == "libgrpcwrapper_message_setdoublefield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_setdoublefield;
+	if (sProcName == "libgrpcwrapper_message_getdoublefield") 
+		*ppProcAddress = (void*) &libgrpcwrapper_message_getdoublefield;
 	if (sProcName == "libgrpcwrapper_response_getresponsetype") 
 		*ppProcAddress = (void*) &libgrpcwrapper_response_getresponsetype;
 	if (sProcName == "libgrpcwrapper_request_getrequesttype") 

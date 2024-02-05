@@ -60,6 +60,10 @@
 		<error name="EMPTYSERVICEMETHOD" code="1020" description="Empty service method." />
 		<error name="EMPTYREQUESTRESPONSE" code="1021" description="Empty request response." />
 		<error name="FAILEDTOPARSEREQUESTRESPONSE" code="1022" description="Failed to parse request response." />
+		<error name="MESSAGEDESCRIPTORISNULL" code="1023" description="Internal error: Message descriptor is null" />
+		<error name="MESSAGISNULL" code="1024" description="Internal error: Message is null" />
+		<error name="MESSAGREFLECTIONISNULL" code="1025" description="Internal error: Message reflection is null" />
+				
 	</errors>
 	
 
@@ -71,24 +75,94 @@
 
 	<class name="Message" parent="Base">
 
-		<method name="HasField" description="Returns if the request has a field of a certain name.">
+		<method name="HasField" description="Returns if the message has a field of a certain name.">
 			<param name="FieldName" type="string" pass="in" description="Name of the field." />
-			<param name="FieldeExists" type="bool" pass="return" description="True if field exists." />
+			<param name="FieldExists" type="bool" pass="return" description="True if field exists." />
 		</method>
 
-		<method name="HasStringField" description="Returns if the request has a field of a certain name and this field is a string field.">
+		<method name="HasStringField" description="Returns if the message has a field of a certain name and this field is a string field.">
 			<param name="FieldName" type="string" pass="in" description="Name of the field." />
 			<param name="StringFieldExists" type="bool" pass="return" description="True if field exists and is of type string." />
 		</method>
 
-		<method name="SetStringField" description="Sets a string field of the request. Fails if the field does not exist or is not a string field.">
+		<method name="SetStringField" description="Sets a string field of the message. Fails if the field does not exist or is not a string field.">
 			<param name="FieldName" type="string" pass="in" description="Name of the field." />
 			<param name="Value" type="string" pass="in" description="New value of the field." />
 		</method>
 
-		<method name="GetStringField" description="Gets a string field of the request. Fails if the field does not exist or is not a string field.">
+		<method name="GetStringField" description="Gets a string field of the message. Fails if the field does not exist or is not a string field.">
 			<param name="FieldName" type="string" pass="in" description="Name of the field." />
-			<param name="Value" type="string" pass="return" description="New value of the field." />
+			<param name="Value" type="string" pass="return" description="Current value of the field." />
+		</method>
+
+		<method name="SetInt32Field" description="Sets a int32 field of the message. Fails if the field does not exist or is not a int32 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="int32" pass="in" description="New value of the field." />
+		</method>
+
+		<method name="GetInt32Field" description="Gets a int32 field of the message. Fails if the field does not exist or is not a int32 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="int32" pass="return" description="Current value of the field." />
+		</method>
+
+		<method name="SetUInt32Field" description="Sets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="uint32" pass="in" description="New value of the field." />
+		</method>
+
+		<method name="GetUInt32Field" description="Gets a uint32 field of the message. Fails if the field does not exist or is not a uint32 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="uint32" pass="return" description="Current value of the field." />
+		</method>
+		
+		<method name="SetInt64Field" description="Sets a int64 field of the message. Fails if the field does not exist or is not a int64 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="int64" pass="in" description="New value of the field." />
+		</method>
+
+		<method name="GetInt64Field" description="Gets a int64 field of the message. Fails if the field does not exist or is not a int64 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="int64" pass="return" description="Current value of the field." />
+		</method>
+
+		<method name="SetUInt64Field" description="Sets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="uint64" pass="in" description="New value of the field." />
+		</method>
+
+		<method name="GetUInt64Field" description="Gets a uint64 field of the message. Fails if the field does not exist or is not a uint64 field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="uint64" pass="return" description="Current value of the field." />
+		</method>
+
+		<method name="SetBoolField" description="Sets a bool field of the message. Fails if the field does not exist or is not a bool field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="bool" pass="in" description="New value of the field." />
+		</method>
+
+		<method name="GetBoolField" description="Gets a bool field of the message. Fails if the field does not exist or is not a bool field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="bool" pass="return" description="Current value of the field." />
+		</method>
+		
+		<method name="SetFloatField" description="Sets a float field of the message. Fails if the field does not exist or is not a float field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="single" pass="in" description="New value of the field." />
+		</method>
+
+		<method name="GetFloatField" description="Gets a float field of the message. Fails if the field does not exist or is not a float field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="single" pass="return" description="Current value of the field." />
+		</method>
+
+		<method name="SetDoubleField" description="Sets a double field of the message. Fails if the field does not exist or is not a double field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="double" pass="in" description="New value of the field." />
+		</method>
+
+		<method name="GetDoubleField" description="Gets a double field of the message. Fails if the field does not exist or is not a double field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="Value" type="int32" pass="return" description="Current value of the field." />
 		</method>
 
 	</class>	

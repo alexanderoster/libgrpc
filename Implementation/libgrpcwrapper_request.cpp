@@ -59,17 +59,17 @@ CRequest::CRequest(std::shared_ptr<CConnectionInstance> pConnectionInstance, con
     if (!m_pConnectionInstance->hasMessageType(sResponseTypeIdentifier))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER, "invalid response type identifier: " + sResponseTypeIdentifier);
 
-    m_pRequestMessageDescriptor = m_pConnectionInstance->getMessageDescriptor(sRequestTypeIdentifier);
-    m_pRequestMessage = m_pConnectionInstance->createMessage(sRequestTypeIdentifier);
-    m_pRequestReflection = m_pRequestMessage->GetReflection();
+    m_pMessageDescriptor = m_pConnectionInstance->getMessageDescriptor(sRequestTypeIdentifier);
+    m_pMessage = m_pConnectionInstance->createMessage(sRequestTypeIdentifier);
+    m_pReflection = m_pMessage->GetReflection();
 
 }
 
 CRequest::~CRequest()
 {
-    m_pRequestReflection = nullptr;
-    m_pRequestMessage = nullptr;
-    m_pRequestMessageDescriptor = nullptr;
+    m_pReflection = nullptr;
+    m_pMessage = nullptr;
+    m_pMessageDescriptor = nullptr;
     m_pConnectionInstance = nullptr;
 }
 
@@ -83,43 +83,10 @@ std::string CRequest::GetExpectedResponseType()
     return m_sResponseTypeIdentifier;
 }
 
-bool CRequest::HasField(const std::string& sFieldName)
-{
-    const google::protobuf::FieldDescriptor * pFieldDescriptor = m_pRequestMessageDescriptor->FindFieldByName(sFieldName);
-    return (pFieldDescriptor != nullptr);
-}
-
-bool CRequest::HasStringField(const std::string& sFieldName)
-{
-    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pRequestMessageDescriptor->FindFieldByName(sFieldName);
-    if (pFieldDescriptor != nullptr) 
-        return (pFieldDescriptor->type() == google::protobuf::FieldDescriptor::Type::TYPE_STRING);
-
-    return false;
-}
-
-void CRequest::SetStringField(const std::string& sFieldName, const std::string& sValue)
-{
-    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pRequestMessageDescriptor->FindFieldByName(sFieldName);
-    if (pFieldDescriptor == nullptr) 
-        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
-
-    m_pRequestReflection->SetString(m_pRequestMessage.get(), pFieldDescriptor, sValue);
-
-}
-
-std::string CRequest::GetStringField(const std::string& sFieldName)
-{
-    const google::protobuf::FieldDescriptor* pFieldDescriptor = m_pRequestMessageDescriptor->FindFieldByName(sFieldName);
-    if (pFieldDescriptor == nullptr)
-        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_REQUESTFIELDNOTFOUND, "request field not found: " + sFieldName);
-
-    return m_pRequestReflection->GetString (*m_pRequestMessage.get(), pFieldDescriptor);
-}
 
 IResponse * CRequest::SendBlocking(const std::string & sServiceMethod, const LibGRPCWrapper_uint32 nTimeOutInMS)
 {
-    grpc::ByteBuffer responseBuffer = m_pConnectionInstance->sendMessageBlocking(m_pRequestMessage, sServiceMethod, nTimeOutInMS);
+    grpc::ByteBuffer responseBuffer = m_pConnectionInstance->sendMessageBlocking(m_pMessage, sServiceMethod, nTimeOutInMS);
 
     return new CResponse (m_pConnectionInstance, m_sResponseTypeIdentifier, responseBuffer);  
     

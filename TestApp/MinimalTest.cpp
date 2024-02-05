@@ -26,6 +26,7 @@ int main()
 
         protoFileStream << "message MachineResponse {" << std::endl;
         protoFileStream << "  string response_1 = 1;" << std::endl;
+        protoFileStream << "  bool response_2 = 2;" << std::endl;
         protoFileStream << "}" << std::endl;
 
         std::cout << "Creating connection\n";
@@ -48,6 +49,7 @@ int main()
         std::string sResponseField = pResponse->GetStringField("response_1");
 
         std::cout << "Response field: " << sResponseField << std::endl;
+        std::cout << "Response bool field: " << pRequest->GetBoolField ("response_2") << std::endl;
 
         std::cout << "done\n";
     }
