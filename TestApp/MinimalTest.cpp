@@ -2,6 +2,7 @@
 #include <iostream>
 #include "libgrpcwrapper_dynamic.hpp"
 #include <sstream>
+#include <fstream>
 
 int main()
 {
@@ -10,7 +11,17 @@ int main()
         std::cout << "Loading Wrapper\n";
         auto pWrapper = LibGRPCWrapper::CWrapper::loadLibrary("libgrpcwrapper.dll");
 
-		std::stringstream protoFileStream;
+        std::fstream fileStream;
+        fileStream.open("machine.proto");
+        if (!fileStream.is_open())
+            throw std::runtime_error("could not open proto file.");
+
+        std::stringstream buffer;
+        buffer << fileStream.rdbuf();
+
+
+		/*
+        std::stringstream protoFileStream;
 
 		protoFileStream << "syntax = \"proto3\";" << std::endl;
 		protoFileStream << "package machine;" << std::endl;
@@ -29,8 +40,11 @@ int main()
         protoFileStream << "  bool response_2 = 2;" << std::endl;
         protoFileStream << "}" << std::endl;
 
+        */
+
         std::cout << "Creating connection\n";
-        auto pProtocol = pWrapper->CreateProtocol(protoFileStream.str());
+        std::cout << buffer.str() << std::endl;
+        auto pProtocol = pWrapper->CreateProtocol(buffer.str());
 
         std::cout << "Connecting\n";
         auto pConnection = pProtocol->ConnectUnsecure("localhost:50051");
@@ -38,18 +52,18 @@ int main()
         std::cout << "Connection end point: " << pConnection->GetEndPoint() << std::endl;
 
         std::cout << "Creating request "<< std::endl;
-        auto pRequest = pConnection->CreateStaticRequest("MachineRequest", "MachineResponse");
+        auto pRequest = pConnection->CreateStaticRequest("DoorOpenRequest", "Result");
 
         std::cout << "Setting fields" << std::endl;
-        pRequest->SetStringField("field_1", "test Field 1");
-        pRequest->SetStringField("field_2", "test Field 2");
+        pRequest->SetBoolField("both", true);
 
         std::cout << "Sending Request\n";
-        auto pResponse = pRequest->SendBlocking("/machine.MachineService/SendTestMessage", 10000);
-        std::string sResponseField = pResponse->GetStringField("response_1");
+        auto pResponse = pRequest->SendBlocking("/machine_interface.Machine/OpenDoors", 10000);
+//         = pResponse->GetBoolField("success");
+        std::string sResponseField = pResponse->GetStringField("error");
 
         std::cout << "Response field: " << sResponseField << std::endl;
-        std::cout << "Response bool field: " << pRequest->GetBoolField ("response_2") << std::endl;
+        //std::cout << "Response bool field: " << pRequest->GetBoolField ("response_2") << std::endl;
 
         std::cout << "done\n";
     }
