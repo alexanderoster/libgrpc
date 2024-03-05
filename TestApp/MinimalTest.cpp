@@ -47,7 +47,7 @@ int main()
         auto pProtocol = pWrapper->CreateProtocol(buffer.str());
 
         std::cout << "Connecting\n";
-        auto pConnection = pProtocol->ConnectUnsecure("localhost:50051");
+        auto pConnection = pProtocol->ConnectUnsecure("192.168.5.2:50051");
 
         std::cout << "Connection end point: " << pConnection->GetEndPoint() << std::endl;
 
@@ -59,10 +59,17 @@ int main()
 
         std::cout << "Sending Request\n";
         auto pResponse = pRequest->SendBlocking("/machine_interface.Machine/OpenDoors", 10000);
-//         = pResponse->GetBoolField("success");
-        std::string sResponseField = pResponse->GetStringField("error");
+        if (pResponse->HasField("success")) {
+            std::cout << "Call succeeded: " << pResponse->GetBoolField ("success") << std::endl;
 
-        std::cout << "Response field: " << sResponseField << std::endl;
+        }
+        else {
+            std::string sResponseField = pResponse->GetStringField("error");
+            std::cout << "Error field: " << sResponseField << std::endl;
+
+        }
+//         = pResponse->GetBoolField("success");
+
         //std::cout << "Response bool field: " << pRequest->GetBoolField ("response_2") << std::endl;
 
         std::cout << "done\n";

@@ -51,13 +51,52 @@ CConnectionInstance::CConnectionInstance(const std::string& sProtobufDefinition,
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTCREATECHANNEL, "Could not create channel: " + sEndPoint);
 
     // Create temporary.proto file and fill with given content
-    const std::string sProtoFilePathTemp = "temp.proto";
-    std::ofstream tempFile(sProtoFilePathTemp);
+    // TODO: Make virtual path readers!!!
+    std::wstring sMapPathW;
+    std::string sMapPath;
+#ifdef _WIN32
+    std::vector<wchar_t> TempPathBufferW;
+    TempPathBufferW.resize(MAX_PATH + 1);
+    auto nSize = GetTempPathW(MAX_PATH, TempPathBufferW.data());
+    if (nSize == 0)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTRETRIEVETEMPPATHS);
+
+    TempPathBufferW[MAX_PATH] = 0;
+    sMapPathW = TempPathBufferW.data();
+
+    std::vector<char> TempPathBuffer(MAX_PATH * 2 + 4);
+    int nResult = WideCharToMultiByte(CP_UTF8, 0, sMapPathW.c_str(), sMapPathW.size (), TempPathBuffer.data (), MAX_PATH, nullptr, nullptr);
+    if (nResult == 0)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTCONVERTUNICODESTRING);
+
+    TempPathBuffer.at(TempPathBuffer.size() - 1) = 0;
+
+    sMapPath = TempPathBuffer.data ();
+
+#else
+    sMapPath = "/tmp";
+#endif
+
+    std::string sProtoFilePathTemp = "libgrpc_temp_";
+
+    for (int index = 0; index < 16; index++) {
+        uint8_t nValue = rand() % 16;
+        if (nValue < 10)
+            sProtoFilePathTemp += ('0' + nValue);
+        else
+            sProtoFilePathTemp += ('a' + nValue - 10);
+    }
+
+    sProtoFilePathTemp += ".proto";
+
+    std::wstring sProtoFilePathTempW (sProtoFilePathTemp.begin (), sProtoFilePathTemp.end());
+
+    std::ofstream tempFile(sMapPathW + L"/" + sProtoFilePathTempW);
     tempFile << sProtobufDefinition;
     tempFile.close();
 
     m_pSourceTree = std::make_shared<google::protobuf::compiler::DiskSourceTree>();
-    m_pSourceTree->MapPath("", "W:/libgrpc/build/Release");
+    m_pSourceTree->MapPath("", sMapPath);
 
     m_pErrorCollector = std::make_shared<CConnectionErrorCollector> ();
 

@@ -1,6 +1,7 @@
 mkdir build
 cd build
 cmake ..
-cmake -DCMAKE_TOOLCHAIN_FILE=w:/vcpkg/scripts/buildsystems/vcpkg.cmake --build . --config Release 
+REM cmake -DCMAKE_TOOLCHAIN_FILE=c:\vcpkg\scripts\buildsystems\vcpkg.cmake --build . --config Release 
+cmake --build . --config Release 
 
 pause

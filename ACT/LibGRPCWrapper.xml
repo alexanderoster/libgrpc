@@ -63,6 +63,9 @@
 		<error name="MESSAGEDESCRIPTORISNULL" code="1023" description="Internal error: Message descriptor is null" />
 		<error name="MESSAGISNULL" code="1024" description="Internal error: Message is null" />
 		<error name="MESSAGREFLECTIONISNULL" code="1025" description="Internal error: Message reflection is null" />
+		<error name="COULDNOTRETRIEVETEMPPATHS" code="1026" description="Could not retrieve temp paths" />
+		<error name="COULDNOTCONVERTUNICODESTRING" code="1027" description="Could not convert unicode string" />
+		
 				
 	</errors>
 	
