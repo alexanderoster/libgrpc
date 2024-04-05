@@ -147,9 +147,9 @@ std::shared_ptr<google::protobuf::Message> CConnectionInstance::createMessage(co
     return pMessageInstance;
 }
 
-grpc::ByteBuffer CConnectionInstance::sendMessageBlocking(std::shared_ptr<google::protobuf::Message> pMessage, const std::string& sServiceMethod, uint32_t nTimeoutInMS)
+grpc::ByteBuffer CConnectionInstance::sendMessageBlocking(google::protobuf::Message* pMessage, const std::string& sServiceMethod, uint32_t nTimeoutInMS)
 {
-    if (pMessage.get () == nullptr)
+    if (pMessage == nullptr)
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
     if (sServiceMethod.empty ())
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_EMPTYSERVICEMETHOD);

@@ -100,7 +100,7 @@ namespace Impl {
 
         std::shared_ptr<google::protobuf::Message> createMessage(const std::string& sMessageTypeName);
 
-        grpc::ByteBuffer sendMessageBlocking (std::shared_ptr<google::protobuf::Message> pMessage, const std::string & sServiceMethod, uint32_t nTimeoutInMS);
+        grpc::ByteBuffer sendMessageBlocking (google::protobuf::Message* pMessage, const std::string & sServiceMethod, uint32_t nTimeoutInMS);
     };
 
 } // namespace Impl

@@ -44,20 +44,20 @@ using namespace LibGRPCWrapper::Impl;
 **************************************************************************************************************************/
 
 CResponse::CResponse(std::shared_ptr<CConnectionInstance> pConnectionInstance, const std::string& sResponseTypeIdentifier, const grpc::ByteBuffer& byteBuffer)
-    : CMessage(), m_pConnectionInstance(pConnectionInstance), m_sResponseTypeIdentifier(sResponseTypeIdentifier)
+    : CMessage(pConnectionInstance), m_sResponseTypeIdentifier(sResponseTypeIdentifier)
 {
-    if (m_pConnectionInstance.get() == nullptr)
+    if (pConnectionInstance.get() == nullptr)
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
 
     if (sResponseTypeIdentifier.empty())
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_EMPTYRESPONSETYPEIDENTIFIER);
 
-    if (!m_pConnectionInstance->hasMessageType(sResponseTypeIdentifier))
+    if (!pConnectionInstance->hasMessageType(sResponseTypeIdentifier))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER, "invalid response type identifier: " + sResponseTypeIdentifier);
 
-    m_pMessageDescriptor = m_pConnectionInstance->getMessageDescriptor(sResponseTypeIdentifier);
-    m_pMessage = m_pConnectionInstance->createMessage(sResponseTypeIdentifier);
-    m_pReflection = m_pMessage->GetReflection();
+    auto pMessageDescriptor = pConnectionInstance->getMessageDescriptor(sResponseTypeIdentifier);
+    auto pMessage = pConnectionInstance->createMessage(sResponseTypeIdentifier);
+    auto m_pReflection = pMessage->GetReflection();
 
     // Deserialize response
     std::vector<grpc::Slice> responseSlices;
@@ -67,9 +67,10 @@ CResponse::CResponse(std::shared_ptr<CConnectionInstance> pConnectionInstance, c
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_EMPTYREQUESTRESPONSE, "empty request response: " + m_sResponseTypeIdentifier);
     std::string serializedResponse = std::string((const char*)responseSlices[0].begin(), responseSlices[0].size());
 
-    if (!m_pMessage->ParseFromString(serializedResponse))
+    if (!pMessage->ParseFromString(serializedResponse))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE, "empty request response: " + m_sResponseTypeIdentifier);
 
+    setMessageObjects(pMessage, pMessage.get());
 }
 
 CResponse::~CResponse()

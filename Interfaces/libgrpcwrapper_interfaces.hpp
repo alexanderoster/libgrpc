@@ -261,6 +261,20 @@ public:
 	virtual bool HasStringField(const std::string & sFieldName) = 0;
 
 	/**
+	* IMessage::HasMessageField - Returns if the message has a field of a certain name and this field is a submessage field.
+	* @param[in] sFieldName - Name of the field.
+	* @return True if field exists and is of type message.
+	*/
+	virtual bool HasMessageField(const std::string & sFieldName) = 0;
+
+	/**
+	* IMessage::GetMessageField - Returns the submessage of a field. Fails if the field does not exist or is not a submessage field.
+	* @param[in] sFieldName - Name of the field.
+	* @return Sub message object
+	*/
+	virtual IMessage * GetMessageField(const std::string & sFieldName) = 0;
+
+	/**
 	* IMessage::SetStringField - Sets a string field of the message. Fails if the field does not exist or is not a string field.
 	* @param[in] sFieldName - Name of the field.
 	* @param[in] sValue - New value of the field.
@@ -370,7 +384,7 @@ public:
 	* @param[in] sFieldName - Name of the field.
 	* @return Current value of the field.
 	*/
-	virtual LibGRPCWrapper_int32 GetDoubleField(const std::string & sFieldName) = 0;
+	virtual LibGRPCWrapper_double GetDoubleField(const std::string & sFieldName) = 0;
 
 };
 

@@ -58,7 +58,6 @@ namespace Impl {
 
 class CResponse : public virtual IResponse, public virtual CMessage {
 private:
-    std::shared_ptr<CConnectionInstance> m_pConnectionInstance;
 
     std::string m_sResponseTypeIdentifier;
 

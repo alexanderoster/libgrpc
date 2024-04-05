@@ -58,24 +58,32 @@ namespace Impl {
 class CMessage : public virtual IMessage, public virtual CBase {
 private:
 
+    std::shared_ptr<CConnectionInstance> m_pConnectionInstance;
 
-protected:
-
+    std::shared_ptr<google::protobuf::Message> m_pMessageOwner;
+    google::protobuf::Message* m_pMessage;
     const google::protobuf::Descriptor* m_pMessageDescriptor;
-    std::shared_ptr<google::protobuf::Message> m_pMessage;
     const google::protobuf::Reflection* m_pReflection;
 
     void ensureObjects();
 
+protected:
+
+    void setMessageObjects (std::shared_ptr<google::protobuf::Message> pMessageOwner, google::protobuf::Message * pMessage);
+
 public:
 
-    CMessage();
+    CMessage(std::shared_ptr<CConnectionInstance> pConnectionInstance);
 
     virtual ~CMessage();
 
     bool HasField(const std::string& sFieldName) override;
 
     bool HasStringField(const std::string& sFieldName) override;
+
+	bool HasMessageField(const std::string& sFieldName) override;
+	
+    IMessage* GetMessageField(const std::string& sFieldName) override;
 
     void SetStringField(const std::string& sFieldName, const std::string& sValue) override;
 
@@ -107,9 +115,11 @@ public:
 
 	void SetDoubleField(const std::string& sFieldName, const LibGRPCWrapper_double dValue) override;
 
-	LibGRPCWrapper_int32 GetDoubleField(const std::string& sFieldName) override;
+	LibGRPCWrapper_double GetDoubleField(const std::string& sFieldName) override;
 
+    std::shared_ptr<CConnectionInstance> getConnectionInstance();
 
+    google::protobuf::Message* getMessage();
 };
 
 } // namespace Impl

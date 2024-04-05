@@ -66,6 +66,8 @@
 		<error name="COULDNOTRETRIEVETEMPPATHS" code="1026" description="Could not retrieve temp paths" />
 		<error name="COULDNOTCONVERTUNICODESTRING" code="1027" description="Could not convert unicode string" />
 		
+		<error name="MESSAGEFIELDNOTFOUND" code="1028" description="Message field not found" />
+		
 				
 	</errors>
 	
@@ -86,6 +88,16 @@
 		<method name="HasStringField" description="Returns if the message has a field of a certain name and this field is a string field.">
 			<param name="FieldName" type="string" pass="in" description="Name of the field." />
 			<param name="StringFieldExists" type="bool" pass="return" description="True if field exists and is of type string." />
+		</method>
+		
+		<method name="HasMessageField" description="Returns if the message has a field of a certain name and this field is a submessage field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="MessageFieldExists" type="bool" pass="return" description="True if field exists and is of type message." />
+		</method>
+
+		<method name="GetMessageField" description="Returns the submessage of a field. Fails if the field does not exist or is not a submessage field.">
+			<param name="FieldName" type="string" pass="in" description="Name of the field." />
+			<param name="MessageFieldInstance" type="class" class="Message" pass="return" description="Sub message object" />
 		</method>
 
 		<method name="SetStringField" description="Sets a string field of the message. Fails if the field does not exist or is not a string field.">
@@ -165,7 +177,7 @@
 
 		<method name="GetDoubleField" description="Gets a double field of the message. Fails if the field does not exist or is not a double field.">
 			<param name="FieldName" type="string" pass="in" description="Name of the field." />
-			<param name="Value" type="int32" pass="return" description="Current value of the field." />
+			<param name="Value" type="double" pass="return" description="Current value of the field." />
 		</method>
 
 	</class>	

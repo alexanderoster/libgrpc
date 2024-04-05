@@ -44,9 +44,9 @@ using namespace LibGRPCWrapper::Impl;
 **************************************************************************************************************************/
 
 CRequest::CRequest(std::shared_ptr<CConnectionInstance> pConnectionInstance, const std::string& sRequestTypeIdentifier, const std::string& sResponseTypeIdentifier)
-    : CMessage (), m_pConnectionInstance (pConnectionInstance), m_sRequestTypeIdentifier (sRequestTypeIdentifier), m_sResponseTypeIdentifier (sResponseTypeIdentifier)
+    : CMessage (pConnectionInstance), m_sRequestTypeIdentifier (sRequestTypeIdentifier), m_sResponseTypeIdentifier (sResponseTypeIdentifier)
 {
-    if (m_pConnectionInstance.get() == nullptr)
+    if (pConnectionInstance.get() == nullptr)
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
 
     if (sRequestTypeIdentifier.empty ())
@@ -54,23 +54,19 @@ CRequest::CRequest(std::shared_ptr<CConnectionInstance> pConnectionInstance, con
     if (sResponseTypeIdentifier.empty())
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_EMPTYRESPONSETYPEIDENTIFIER);
 
-    if (!m_pConnectionInstance->hasMessageType (sRequestTypeIdentifier))
+    if (!pConnectionInstance->hasMessageType (sRequestTypeIdentifier))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDREQUESTTYPEIDENTIFIER, "invalid request type identifier: " + sRequestTypeIdentifier);
-    if (!m_pConnectionInstance->hasMessageType(sResponseTypeIdentifier))
+    if (!pConnectionInstance->hasMessageType(sResponseTypeIdentifier))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER, "invalid response type identifier: " + sResponseTypeIdentifier);
 
-    m_pMessageDescriptor = m_pConnectionInstance->getMessageDescriptor(sRequestTypeIdentifier);
-    m_pMessage = m_pConnectionInstance->createMessage(sRequestTypeIdentifier);
-    m_pReflection = m_pMessage->GetReflection();
+    auto pOwner = pConnectionInstance->createMessage(sRequestTypeIdentifier);
+    setMessageObjects(pOwner, pOwner.get());
 
 }
 
 CRequest::~CRequest()
 {
-    m_pReflection = nullptr;
-    m_pMessage = nullptr;
-    m_pMessageDescriptor = nullptr;
-    m_pConnectionInstance = nullptr;
+
 }
 
 std::string CRequest::GetRequestType()
@@ -86,9 +82,9 @@ std::string CRequest::GetExpectedResponseType()
 
 IResponse * CRequest::SendBlocking(const std::string & sServiceMethod, const LibGRPCWrapper_uint32 nTimeOutInMS)
 {
-    grpc::ByteBuffer responseBuffer = m_pConnectionInstance->sendMessageBlocking(m_pMessage, sServiceMethod, nTimeOutInMS);
+    grpc::ByteBuffer responseBuffer = getConnectionInstance ()->sendMessageBlocking(getMessage (), sServiceMethod, nTimeOutInMS);
 
-    return new CResponse (m_pConnectionInstance, m_sResponseTypeIdentifier, responseBuffer);  
+    return new CResponse (getConnectionInstance (), m_sResponseTypeIdentifier, responseBuffer);  
     
 
 }

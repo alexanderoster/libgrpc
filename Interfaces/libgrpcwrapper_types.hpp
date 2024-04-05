@@ -123,6 +123,7 @@ typedef void * LibGRPCWrapper_pvoid;
 #define LIBGRPCWRAPPER_ERROR_MESSAGREFLECTIONISNULL 1025 /** Internal error: Message reflection is null */
 #define LIBGRPCWRAPPER_ERROR_COULDNOTRETRIEVETEMPPATHS 1026 /** Could not retrieve temp paths */
 #define LIBGRPCWRAPPER_ERROR_COULDNOTCONVERTUNICODESTRING 1027 /** Could not convert unicode string */
+#define LIBGRPCWRAPPER_ERROR_MESSAGEFIELDNOTFOUND 1026 /** Message field not found */
 
 /*************************************************************************************************************************
  Error strings for LibGRPCWrapper
@@ -158,6 +159,7 @@ inline const char * LIBGRPCWRAPPER_GETERRORSTRING (LibGRPCWrapperResult nErrorCo
     case LIBGRPCWRAPPER_ERROR_MESSAGREFLECTIONISNULL: return "Internal error: Message reflection is null";
     case LIBGRPCWRAPPER_ERROR_COULDNOTRETRIEVETEMPPATHS: return "Could not retrieve temp paths";
     case LIBGRPCWRAPPER_ERROR_COULDNOTCONVERTUNICODESTRING: return "Could not convert unicode string";
+    case LIBGRPCWRAPPER_ERROR_MESSAGEFIELDNOTFOUND: return "Message field not found";
     default: return "unknown error";
   }
 }

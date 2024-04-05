@@ -85,6 +85,26 @@ LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_hasfield(Lib
 LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_hasstringfield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pStringFieldExists);
 
 /**
+* Returns if the message has a field of a certain name and this field is a submessage field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pMessageFieldExists - True if field exists and is of type message.
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_hasmessagefield(LibGRPCWrapper_Message pMessage, const char * pFieldName, bool * pMessageFieldExists);
+
+/**
+* Returns the submessage of a field. Fails if the field does not exist or is not a submessage field.
+*
+* @param[in] pMessage - Message instance.
+* @param[in] pFieldName - Name of the field.
+* @param[out] pMessageFieldInstance - Sub message object
+* @return error code or 0 (success)
+*/
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_getmessagefield(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_Message * pMessageFieldInstance);
+
+/**
 * Sets a string field of the message. Fails if the field does not exist or is not a string field.
 *
 * @param[in] pMessage - Message instance.
@@ -244,7 +264,7 @@ LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_setdoublefie
 * @param[out] pValue - Current value of the field.
 * @return error code or 0 (success)
 */
-LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_getdoublefield(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_int32 * pValue);
+LIBGRPCWRAPPER_DECLSPEC LibGRPCWrapperResult libgrpcwrapper_message_getdoublefield(LibGRPCWrapper_Message pMessage, const char * pFieldName, LibGRPCWrapper_double * pValue);
 
 /*************************************************************************************************************************
  Class definition for Response

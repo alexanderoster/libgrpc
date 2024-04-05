@@ -57,8 +57,7 @@ namespace Impl {
 
 class CRequest : public virtual IRequest, public virtual CMessage {
 private:
-
-    std::shared_ptr<CConnectionInstance> m_pConnectionInstance;
+    
     std::string m_sRequestTypeIdentifier;
     std::string m_sResponseTypeIdentifier;
 
