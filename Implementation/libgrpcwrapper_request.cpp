@@ -60,7 +60,9 @@ CRequest::CRequest(std::shared_ptr<CConnectionInstance> pConnectionInstance, con
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDRESPONSETYPEIDENTIFIER, "invalid response type identifier: " + sResponseTypeIdentifier);
 
     auto pOwner = pConnectionInstance->createMessage(sRequestTypeIdentifier);
-    setMessageObjects(pOwner, pOwner.get());
+    auto pDescriptor = pConnectionInstance->getMessageDescriptor(sRequestTypeIdentifier);
+
+    setMessageObjects(pOwner, pOwner.get(), pDescriptor);
 
 }
 

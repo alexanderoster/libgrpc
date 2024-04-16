@@ -69,7 +69,7 @@ private:
 
 protected:
 
-    void setMessageObjects (std::shared_ptr<google::protobuf::Message> pMessageOwner, google::protobuf::Message * pMessage);
+    void setMessageObjects (std::shared_ptr<google::protobuf::Message> pMessageOwner, google::protobuf::Message * pMessage, const google::protobuf::Descriptor * pDescriptor);
 
 public:
 

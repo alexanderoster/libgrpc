@@ -60,18 +60,19 @@ CMessage::~CMessage()
     m_pConnectionInstance = nullptr;
 }
 
-void CMessage::setMessageObjects(std::shared_ptr<google::protobuf::Message> pMessageOwner, google::protobuf::Message* pMessage)
+void CMessage::setMessageObjects(std::shared_ptr<google::protobuf::Message> pMessageOwner, google::protobuf::Message* pMessage, const google::protobuf::Descriptor* pDescriptor)
 {
     if (pMessageOwner.get () == nullptr)
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
     if (pMessage == nullptr)
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
+    if (pDescriptor == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_INVALIDPARAM);
 
     m_pMessageOwner = pMessageOwner;
     m_pMessage = pMessage;
 
-    std::string sTypeName = m_pMessage->GetTypeName();
-    m_pMessageDescriptor = m_pConnectionInstance->getMessageDescriptor(sTypeName);
+    m_pMessageDescriptor = pDescriptor;
     m_pReflection = m_pMessage->GetReflection();
 
 }
@@ -128,10 +129,17 @@ IMessage* CMessage::GetMessageField(const std::string& sFieldName)
     if (pFieldDescriptor == nullptr)
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_MESSAGEFIELDNOTFOUND, "message field not found: " + sFieldName);
 
+    if (pFieldDescriptor->type() != google::protobuf::FieldDescriptor::Type::TYPE_MESSAGE) 
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_MESSAGEFIELDNOTFOUND, "field is not a message field: " + sFieldName);
+
     google::protobuf::Message* pSubMessage = m_pReflection->MutableMessage(m_pMessage, pFieldDescriptor);
 
-    std::unique_ptr<CMessage> pResult;
-    pResult->setMessageObjects(m_pMessageOwner, pSubMessage);
+    if (pSubMessage == nullptr)
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_MESSAGEFIELDNOTFOUND, "could not get mutable sub message: " + sFieldName);
+
+    std::unique_ptr<CMessage> pResult (new CMessage (m_pConnectionInstance));
+
+    pResult->setMessageObjects(m_pMessageOwner, pSubMessage, pFieldDescriptor->message_type ());
 
     return pResult.release();
 }

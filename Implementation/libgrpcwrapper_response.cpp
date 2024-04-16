@@ -70,7 +70,9 @@ CResponse::CResponse(std::shared_ptr<CConnectionInstance> pConnectionInstance, c
     if (!pMessage->ParseFromString(serializedResponse))
         throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_FAILEDTOPARSEREQUESTRESPONSE, "empty request response: " + m_sResponseTypeIdentifier);
 
-    setMessageObjects(pMessage, pMessage.get());
+    auto pDescriptor = pConnectionInstance->getMessageDescriptor(sResponseTypeIdentifier);
+
+    setMessageObjects(pMessage, pMessage.get(), pDescriptor);
 }
 
 CResponse::~CResponse()

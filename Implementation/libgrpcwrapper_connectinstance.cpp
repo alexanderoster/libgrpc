@@ -112,9 +112,12 @@ CConnectionInstance::CConnectionInstance(const std::string& sProtobufDefinition,
 
 CConnectionInstance::~CConnectionInstance()
 {
+    m_pMessageFactory = nullptr;
+    m_pFileDescriptor = nullptr;
     m_pImporter = nullptr;
     m_pErrorCollector = nullptr;
     m_pSourceTree = nullptr;
+    m_pChannel = nullptr;
 }
 
 
