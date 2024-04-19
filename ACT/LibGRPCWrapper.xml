@@ -64,9 +64,20 @@
 		<error name="MESSAGISNULL" code="1024" description="Internal error: Message is null" />
 		<error name="MESSAGREFLECTIONISNULL" code="1025" description="Internal error: Message reflection is null" />
 		<error name="COULDNOTRETRIEVETEMPPATHS" code="1026" description="Could not retrieve temp paths" />
-		<error name="COULDNOTCONVERTUNICODESTRING" code="1027" description="Could not convert unicode string" />
-		
+		<error name="COULDNOTCONVERTUNICODESTRING" code="1027" description="Could not convert unicode string" />		
 		<error name="MESSAGEFIELDNOTFOUND" code="1028" description="Message field not found" />
+		<error name="COULDNOTSTARTRPCCALL" code="1029" description="Could not start RPC Call" />
+		<error name="COULDNOTSENDREQUEST" code="1030" description="Could not send request" />
+		<error name="COULDNOTINDICATEENDOFREQUEST" code="1031" description="Could not indicate end of request" />
+		<error name="COULDNOTRECEIVERESPONSE" code="1032" description="Could not receive response" />
+		<error name="COULDNOTFINISHRPCCALL" code="1033" description="Could not finish RPC Call" />
+		<error name="RPCFAILED" code="1034" description="RPC failed" />
+		
+		
+		
+		
+		
+		
 		
 				
 	</errors>

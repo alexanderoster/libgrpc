@@ -179,18 +179,12 @@ grpc::ByteBuffer CConnectionInstance::sendMessageBlocking(google::protobuf::Mess
     void* tag = nullptr;
     bool ok = false;
 
-    std::cout << "Initialize RPC call and wait for confirmation";
-
     //Initialize RPC calland wait for confirmation
     call->StartCall((void*)1);
 
     if (!completionQueue.Next(&tag, &ok) || !ok || tag != (void*)1)
     {
-        std::cout << "Could not start RPC call" << std::endl;
-    }
-    else
-    {
-        std::cout << "Successfully started RPC call" << std::endl;
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTSTARTRPCCALL, "Could not start RPC call: " + sServiceMethod);
     }
 
     // Send request to server and wait for confirmation
@@ -198,11 +192,7 @@ grpc::ByteBuffer CConnectionInstance::sendMessageBlocking(google::protobuf::Mess
 
     if (!completionQueue.Next(&tag, &ok) || !ok || tag != (void*)2)
     {
-        std::cout << "Could not send request" << std::endl;
-    }
-    else
-    {
-        std::cout << "Successfully sent request" << std::endl;
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTSENDREQUEST, "Could not send request: " + sServiceMethod);
     }
 
     // Indicate that request is completed and wait for confirmation
@@ -210,24 +200,16 @@ grpc::ByteBuffer CConnectionInstance::sendMessageBlocking(google::protobuf::Mess
 
     if (!completionQueue.Next(&tag, &ok) || !ok || tag != (void*)3)
     {
-        std::cout << "Could not indicate end of request" << std::endl;
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTINDICATEENDOFREQUEST, "Could not indicate end of request: " + sServiceMethod);
     }
-    else
-    {
-        std::cout << "Successfully indicated end of request" << std::endl;
-    }
-
+    
     // Read response from server and wait for confirmation
     grpc::ByteBuffer responseBuffer;
     call->Read(&responseBuffer, (void*)4);
 
     if (!completionQueue.Next(&tag, &ok) || !ok || tag != (void*)4)
     {
-        std::cout << "Could not receive response" << std::endl;
-    }
-    else
-    {
-        std::cout << "Successfully received response" << std::endl;
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTRECEIVERESPONSE, "Could not receive response: " + sServiceMethod);
     }
 
     // Finish RPC call and wait for confirmation
@@ -235,16 +217,13 @@ grpc::ByteBuffer CConnectionInstance::sendMessageBlocking(google::protobuf::Mess
 
     if (!completionQueue.Next(&tag, &ok) || !ok || tag != (void*)5)
     {
-        std::cout << "Could not finish RPC call" << std::endl;
-    }
-    else
-    {
-        std::cout << "Successfully finished RPC call" << std::endl;
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_COULDNOTFINISHRPCCALL, "Could not finish RPC call: " + sServiceMethod);
     }
 
     if (!status.ok())
     {
-        std::cerr << "RPC failed: " << status.error_message() << " - code: " << status.error_code() << std::endl;
+        std::string sErrorMessage = "RPC failed: " + sServiceMethod + " (" + status.error_message() + " - code: " + std::to_string(status.error_code()) + ")";
+        throw ELibGRPCWrapperInterfaceException(LIBGRPCWRAPPER_ERROR_RPCFAILED, sErrorMessage);
     }
 
     return responseBuffer;
